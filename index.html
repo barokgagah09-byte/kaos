@@ -28,7 +28,7 @@ tr:hover{background:#eff6ff; transition:background 0.15s ease;}
 
 input,select,textarea{width:100%; padding:10px 8px; border:1px solid #cbd5e1; border-radius:8px; font-size:15px; background:#fcfdff; transition:all 0.2s ease;}
 input:focus, select:focus, textarea:focus{outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.15); background:#fff;}
-input[type="checkbox"]{width:22px; height:22px; cursor:pointer;}
+input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; display:block;}
 
 .tombol{padding:12px 10px; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; margin:5px 3px; min-height:48px; transition:all 0.2s ease; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
 .tombol:active{transform:scale(0.97); box-shadow:0 1px 3px rgba(0,0,0,0.1);}
@@ -59,12 +59,7 @@ input[type="checkbox"]{width:22px; height:22px; cursor:pointer;}
 
 .petunjuk-scroll { font-size:13px; color:#64748b; margin-bottom:6px; display:block; text-align:right; font-style:italic;}
 
-.kotak-cari {
-  margin-bottom:14px;
-  padding:12px;
-  background:#f1f5f9;
-  border-radius:10px;
-}
+.kotak-cari {margin-bottom:14px; padding:12px; background:#f1f5f9; border-radius:10px;}
 .kotak-cari input {text-align:left; padding-left:14px; background:#fff;}
 
 .kotak-rekap, .kotak-broadcast {margin-top:14px; padding:12px; background:#f8fafc; border-radius:10px; border:1px solid #e2e8f0;}
@@ -183,7 +178,7 @@ Sisa Pembayaran: Rp {{SISA_TAGIHAN}}
 Kami akan segera proses pesanan Anda setelah pembayaran lunas.
 
 Wassalamu'alaikum Wr. Wb.</textarea>
-    <button class="tombol broadcast" onclick="previewPesanDariPilihan()">👁️ Buat Preview Dari Pesanan Terpilih</button>
+    <button class="tombol broadcast" onclick="buatPreviewPesan()">👁️ Buat Preview Dari Pesanan Terpilih</button>
     <div id="hasilPreview" style="margin-top:10px; padding:12px; background:#fff; border-radius:8px; white-space:pre-wrap; display:none; border:1px solid #cbd5e1;"></div>
   </div>
 </div>
@@ -200,7 +195,7 @@ const DAFTAR_MODAL = {
 };
 
 let data = [];
-let daftarTerpilih = new Set();
+let daftarIndexTerpilih = [];
 const KUNCI_SIMPAN = "Catatan_PO_Kaos_2026";
 
 window.onload = () => {
@@ -237,7 +232,7 @@ function bukaCadangan(peristiwa){
   baca.onload = function(e){
     try {
       data = JSON.parse(e.target.result);
-      daftarTerpilih.clear();
+      daftarIndexTerpilih = [];
       simpanOtomatis();
       tampilkanTabel();
       tampilkanPesan("✅ Data dipulihkan dari cadangan!", "sukses");
@@ -258,16 +253,24 @@ function tambahBaris(){
 }
 
 function pilihSemua(){
-  data.forEach((_,i) => daftarTerpilih.add(i));
+  daftarIndexTerpilih = data.map((_,i) => i);
   tampilkanTabel();
   tampilkanPesan("✅ Semua pesanan terpilih!", "sukses");
 }
 
 function batalSemua(){
-  daftarTerpilih.clear();
+  daftarIndexTerpilih = [];
   tampilkanTabel();
   document.getElementById("hasilPreview").style.display = "none";
   tampilkanPesan("❌ Pilihan dibatalkan semua!", "sukses");
+}
+
+function ubahStatusPilihan(index, status){
+  if(status){
+    if(!daftarIndexTerpilih.includes(index)) daftarIndexTerpilih.push(index);
+  }else{
+    daftarIndexTerpilih = daftarIndexTerpilih.filter(i => i !== index);
+  }
 }
 
 function tampilkanTabel(){
@@ -300,16 +303,16 @@ function tampilkanTabel(){
     const bagianReseller = BAGI_HASIL * (baris.jumlah||1);
     const untung = totalJual - totalModal - bagianReseller;
     const kelas = (baris.status||"Aktif") === "Batal" ? "baris-batal" : "";
-    const terpilih = daftarTerpilih.has(nomor) ? "checked" : "";
+    const terpilih = daftarIndexTerpilih.includes(nomor) ? "checked" : "";
 
     let teksBayarHtml, warnaBayar;
     if((baris.bayar||0) === 0) {teksBayarHtml = "🔴 Belum Bayar"; warnaBayar = "#dc3545";}
     else if(sisa > 0) {teksBayarHtml = "🟡 Menyicil"; warnaBayar = "#d97706";}
-    else {teksBayarHtml = "🟢 Lunas"; warnaBayar = "#16a34a";}
+    else {teksBayarHtml = "🟢 Lunas"; warnaBayar = "#166534";}
 
     isi.innerHTML += `
     <tr class="${kelas}">
-      <td><input type="checkbox" ${terpilih} onchange="ubahPilihan(${nomor}, this.checked)"></td>
+      <td><input type="checkbox" ${terpilih} onchange="ubahStatusPilihan(${nomor}, this.checked)"></td>
       <td>${nomor+1}</td>
       <td><input type="text" value="${baris.namaPembeli||''}" onchange="ubahData(${nomor},'namaPembeli',this.value)"></td>
       <td><input type="text" value="${baris.namaReseller||''}" onchange="ubahData(${nomor},'namaReseller',this.value)"></td>
@@ -352,10 +355,6 @@ function tampilkanTabel(){
   hitungRingkasan();
 }
 
-function ubahPilihan(index, status){
-  status ? daftarTerpilih.add(index) : daftarTerpilih.delete(index);
-}
-
 function ubahData(index, kolom, nilai){
   data[index][kolom] = nilai;
   tampilkanTabel();
@@ -365,8 +364,9 @@ function ubahData(index, kolom, nilai){
 function hapusBaris(index){
   if(confirm("Yakin hapus pesanan ini?")){
     data.splice(index,1);
-    daftarTerpilih.delete(index);
-    daftarTerpilih = new Set([...daftarTerpilih].map(i => i >= index ? i-1 : i));
+    daftarIndexTerpilih = daftarIndexTerpilih
+      .filter(i => i !== index)
+      .map(i => i >= index ? i - 1 : i);
     tampilkanTabel();
     simpanOtomatis();
   }
@@ -441,54 +441,54 @@ function hitungRingkasan(){
   }
 }
 
-function previewPesanDariPilihan(){
-  if(daftarTerpilih.size === 0){
+function buatPreviewPesan(){
+  if(daftarIndexTerpilih.length === 0){
     tampilkanPesan("⚠️ Silakan centang dulu pesanan yang ingin dimasukkan ke pesan!", "error");
     return;
   }
 
-  let daftar = "";
-  let totalBayar = 0;
-  let totalUangMasuk = 0;
+  let daftarPesanan = "";
+  let totalBayarSemua = 0;
+  let totalSudahBayar = 0;
   let nomorUrut = 1;
-  let statusGabungan = new Set();
+  let daftarStatus = new Set();
 
-  daftarTerpilih.forEach(idx => {
+  daftarIndexTerpilih.forEach(idx => {
     const b = data[idx];
     if((b.status||"Aktif")==="Batal") return;
     const jenis = b.ukuran==="XXL"?"xxl":"biasa";
     const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
     const jml = b.jumlah||1;
-    const totalItem = harga*jml;
-    totalBayar += totalItem;
-    totalUangMasuk += b.bayar||0;
+    const totalItem = harga * jml;
+    totalBayarSemua += totalItem;
+    totalSudahBayar += b.bayar||0;
 
     let statusItem = "";
     const sisaItem = totalItem - (b.bayar||0);
     if((b.bayar||0) === 0) statusItem = "🔴 Belum Bayar";
     else if(sisaItem > 0) statusItem = "🟡 Menyicil";
     else statusItem = "🟢 Lunas";
-    statusGabungan.add(statusItem);
+    daftarStatus.add(statusItem);
 
-    daftar += `${nomorUrut}. ${b.namaPembeli||"Pembeli"} (Reseller: ${b.namaReseller||"Umum"})\n`;
-    daftar += `   → ${jml} pcs | ${b.model||"Pendek"} | ${b.ukuran} | ${b.warna||"Putih"}\n`;
-    daftar += `   → Total: Rp ${totalItem.toLocaleString('id-ID')} | ${statusItem}\n\n`;
+    daftarPesanan += `${nomorUrut}. ${b.namaPembeli||"Pembeli"} (Reseller: ${b.namaReseller||"Umum"})\n`;
+    daftarPesanan += `   → ${jml} pcs | ${b.model||"Pendek"} | ${b.ukuran} | ${b.warna||"Putih"}\n`;
+    daftarPesanan += `   → Total: Rp ${totalItem.toLocaleString('id-ID')} | ${statusItem}\n\n`;
     nomorUrut++;
   });
 
-  let statusBayar = Array.from(statusGabungan).join(", ");
-  let sisaTagihan = totalBayar - totalUangMasuk;
+  const statusGabungan = Array.from(daftarStatus).join(", ");
+  const sisaTotal = totalBayarSemua - totalSudahBayar;
 
-  let hasil = document.getElementById("teksBroadcast").value;
-  hasil = hasil.replace("{{DAFTAR_PESANAN}}", daftar.trim());
-  hasil = hasil.replace("{{TOTAL_BAYAR}}", totalBayar.toLocaleString('id-ID'));
-  hasil = hasil.replace("{{STATUS_BAYAR}}", statusBayar);
-  hasil = hasil.replace("{{SISA_TAGIHAN}}", sisaTagihan.toLocaleString('id-ID'));
+  let hasilPesan = document.getElementById("teksBroadcast").value;
+  hasilPesan = hasilPesan.replace("{{DAFTAR_PESANAN}}", daftarPesanan.trim());
+  hasilPesan = hasilPesan.replace("{{TOTAL_BAYAR}}", totalBayarSemua.toLocaleString('id-ID'));
+  hasilPesan = hasilPesan.replace("{{STATUS_BAYAR}}", statusGabungan);
+  hasilPesan = hasilPesan.replace("{{SISA_TAGIHAN}}", sisaTotal.toLocaleString('id-ID'));
 
   const kotakHasil = document.getElementById("hasilPreview");
-  kotakHasil.textContent = hasil;
+  kotakHasil.textContent = hasilPesan;
   kotakHasil.style.display = "block";
-  tampilkanPesan(`✅ Preview dibuat dari ${daftarTerpilih.size} pesanan terpilih!`, "sukses");
+  tampilkanPesan(`✅ Preview berhasil dibuat dari ${daftarIndexTerpilih.length} pesanan terpilih!`, "sukses");
 }
 
 function salinDataPembeli(){
