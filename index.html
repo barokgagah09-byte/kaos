@@ -17,7 +17,7 @@ h1{text-align:center; color:#1e293b; margin-bottom:10px; font-size:24px; font-we
 h3{color:#1e293b; margin-bottom:14px; font-size:20px; font-weight:600; display:flex; align-items:center; gap:8px;}
 h4{color:#334155; margin:18px 0 10px 0; font-size:17px; font-weight:600;}
 
-table{min-width: 2600px; table-layout: fixed; border-collapse:separate; border-spacing:0; margin-bottom:12px; border-radius:10px; overflow:hidden;}
+table{min-width: 2700px; table-layout: fixed; border-collapse:separate; border-spacing:0; margin-bottom:12px; border-radius:10px; overflow:hidden;}
 th,td{border:1px solid #e2e8f0; padding:10px 4px; text-align:center; font-size:15px; white-space:nowrap; vertical-align:middle;}
 th{background:linear-gradient(135deg,#1e40af,#3b82f6); color:white; font-weight:600; font-size:15px; position:sticky; top:0; z-index:10;}
 tr:nth-child(even){background:#f8fafc;}
@@ -28,6 +28,7 @@ tr:hover{background:#eff6ff; transition:background 0.15s ease;}
 
 input,select,textarea{width:100%; padding:10px 8px; border:1px solid #cbd5e1; border-radius:8px; font-size:15px; background:#fcfdff; transition:all 0.2s ease;}
 input:focus, select:focus, textarea:focus{outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.15); background:#fff;}
+input[type="checkbox"]{width:22px; height:22px; cursor:pointer;}
 
 .tombol{padding:12px 10px; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; margin:5px 3px; min-height:48px; transition:all 0.2s ease; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
 .tombol:active{transform:scale(0.97); box-shadow:0 1px 3px rgba(0,0,0,0.1);}
@@ -37,6 +38,7 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:#2563eb; bo
 .cetak{background:linear-gradient(135deg,#d97706,#f59e0b); color:white;}
 .salin{background:linear-gradient(135deg,#2563eb,#3b82f6); color:white;}
 .broadcast{background:linear-gradient(135deg,#7c3aed,#8b5cf6); color:white;}
+.pilih{background:linear-gradient(135deg,#059669,#10b981); color:white; font-size:14px; min-height:40px; padding:8px 12px;}
 .hapus{background:linear-gradient(135deg,#dc2626,#ef4444); color:white; padding:8px 14px; font-size:20px; width:auto; min-height:36px;}
 
 .ringkas{display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:10px;}
@@ -67,6 +69,7 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:#2563eb; bo
 
 .kotak-rekap, .kotak-broadcast {margin-top:14px; padding:12px; background:#f8fafc; border-radius:10px; border:1px solid #e2e8f0;}
 .kotak-broadcast textarea {min-height:120px; resize:vertical; margin-bottom:8px;}
+.info-pilih{font-size:13px; color:#475569; margin-bottom:8px; display:block;}
 
 .wadah-tabel{overflow-x:auto; border-radius:10px; -webkit-overflow-scrolling:touch;}
 </style>
@@ -90,12 +93,17 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:#2563eb; bo
   <div class="kotak-cari">
     <input type="text" id="inputCari" oninput="tampilkanTabel()" placeholder="🔍 Cari nama, reseller, ukuran, warna, status...">
   </div>
+  <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+    <button class="tombol pilih" onclick="pilihSemua()">✅ Pilih Semua</button>
+    <button class="tombol pilih" onclick="batalSemua()">❌ Batal Semua Pilihan</button>
+  </div>
 
   <span class="petunjuk-scroll">↔️ Geser kanan-kiri untuk melihat kolom penuh</span>
   <div class="wadah-tabel">
   <table>
     <thead>
       <tr>
+        <th style="width: 55px;">☑️ Pilih</th>
         <th style="width: 50px;">No</th>
         <th style="width: 180px;">Nama Pembeli</th>
         <th style="width: 150px;">Nama Reseller</th>
@@ -160,6 +168,7 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:#2563eb; bo
 
   <h4>📢 PREVIEW PESAN UNDANGAN / KONFIRMASI</h4>
   <div class="kotak-broadcast">
+    <span class="info-pilih">💡 Centang dulu pesanan yang ingin dimasukkan ke pesan, lalu klik tombol di bawah</span>
     <textarea id="teksBroadcast" placeholder="Ketik pesan yang ingin disampaikan ke pembeli/reseller...">Assalamu'alaikum Wr. Wb.
 
 Terima kasih atas pemesanan Kaos Haul Ke-28 Al-Mu'awanah ya 🙏
@@ -169,12 +178,13 @@ Berikut rincian pesanan Anda:
 
 Total Pembayaran: Rp {{TOTAL_BAYAR}}
 Status Pembayaran: {{STATUS_BAYAR}}
+Sisa Pembayaran: Rp {{SISA_TAGIHAN}}
 
 Kami akan segera proses pesanan Anda setelah pembayaran lunas.
 
 Wassalamu'alaikum Wr. Wb.</textarea>
-    <button class="tombol broadcast" onclick="previewPesan()">👁️ Lihat Hasil Pesan</button>
-    <div id="hasilPreview" style="margin-top:10px; padding:12px; background:#fff; border-radius:8px; white-space:pre-wrap; display:none;"></div>
+    <button class="tombol broadcast" onclick="previewPesanDariPilihan()">👁️ Buat Preview Dari Pesanan Terpilih</button>
+    <div id="hasilPreview" style="margin-top:10px; padding:12px; background:#fff; border-radius:8px; white-space:pre-wrap; display:none; border:1px solid #cbd5e1;"></div>
   </div>
 </div>
 
@@ -190,6 +200,7 @@ const DAFTAR_MODAL = {
 };
 
 let data = [];
+let daftarTerpilih = new Set();
 const KUNCI_SIMPAN = "Catatan_PO_Kaos_2026";
 
 window.onload = () => {
@@ -226,6 +237,7 @@ function bukaCadangan(peristiwa){
   baca.onload = function(e){
     try {
       data = JSON.parse(e.target.result);
+      daftarTerpilih.clear();
       simpanOtomatis();
       tampilkanTabel();
       tampilkanPesan("✅ Data dipulihkan dari cadangan!", "sukses");
@@ -243,6 +255,19 @@ function tambahBaris(){
   });
   tampilkanTabel();
   simpanOtomatis();
+}
+
+function pilihSemua(){
+  data.forEach((_,i) => daftarTerpilih.add(i));
+  tampilkanTabel();
+  tampilkanPesan("✅ Semua pesanan terpilih!", "sukses");
+}
+
+function batalSemua(){
+  daftarTerpilih.clear();
+  tampilkanTabel();
+  document.getElementById("hasilPreview").style.display = "none";
+  tampilkanPesan("❌ Pilihan dibatalkan semua!", "sukses");
 }
 
 function tampilkanTabel(){
@@ -275,6 +300,7 @@ function tampilkanTabel(){
     const bagianReseller = BAGI_HASIL * (baris.jumlah||1);
     const untung = totalJual - totalModal - bagianReseller;
     const kelas = (baris.status||"Aktif") === "Batal" ? "baris-batal" : "";
+    const terpilih = daftarTerpilih.has(nomor) ? "checked" : "";
 
     let teksBayarHtml, warnaBayar;
     if((baris.bayar||0) === 0) {teksBayarHtml = "🔴 Belum Bayar"; warnaBayar = "#dc3545";}
@@ -283,6 +309,7 @@ function tampilkanTabel(){
 
     isi.innerHTML += `
     <tr class="${kelas}">
+      <td><input type="checkbox" ${terpilih} onchange="ubahPilihan(${nomor}, this.checked)"></td>
       <td>${nomor+1}</td>
       <td><input type="text" value="${baris.namaPembeli||''}" onchange="ubahData(${nomor},'namaPembeli',this.value)"></td>
       <td><input type="text" value="${baris.namaReseller||''}" onchange="ubahData(${nomor},'namaReseller',this.value)"></td>
@@ -325,6 +352,10 @@ function tampilkanTabel(){
   hitungRingkasan();
 }
 
+function ubahPilihan(index, status){
+  status ? daftarTerpilih.add(index) : daftarTerpilih.delete(index);
+}
+
 function ubahData(index, kolom, nilai){
   data[index][kolom] = nilai;
   tampilkanTabel();
@@ -334,6 +365,8 @@ function ubahData(index, kolom, nilai){
 function hapusBaris(index){
   if(confirm("Yakin hapus pesanan ini?")){
     data.splice(index,1);
+    daftarTerpilih.delete(index);
+    daftarTerpilih = new Set([...daftarTerpilih].map(i => i >= index ? i-1 : i));
     tampilkanTabel();
     simpanOtomatis();
   }
@@ -408,6 +441,56 @@ function hitungRingkasan(){
   }
 }
 
+function previewPesanDariPilihan(){
+  if(daftarTerpilih.size === 0){
+    tampilkanPesan("⚠️ Silakan centang dulu pesanan yang ingin dimasukkan ke pesan!", "error");
+    return;
+  }
+
+  let daftar = "";
+  let totalBayar = 0;
+  let totalUangMasuk = 0;
+  let nomorUrut = 1;
+  let statusGabungan = new Set();
+
+  daftarTerpilih.forEach(idx => {
+    const b = data[idx];
+    if((b.status||"Aktif")==="Batal") return;
+    const jenis = b.ukuran==="XXL"?"xxl":"biasa";
+    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
+    const jml = b.jumlah||1;
+    const totalItem = harga*jml;
+    totalBayar += totalItem;
+    totalUangMasuk += b.bayar||0;
+
+    let statusItem = "";
+    const sisaItem = totalItem - (b.bayar||0);
+    if((b.bayar||0) === 0) statusItem = "🔴 Belum Bayar";
+    else if(sisaItem > 0) statusItem = "🟡 Menyicil";
+    else statusItem = "🟢 Lunas";
+    statusGabungan.add(statusItem);
+
+    daftar += `${nomorUrut}. ${b.namaPembeli||"Pembeli"} (Reseller: ${b.namaReseller||"Umum"})\n`;
+    daftar += `   → ${jml} pcs | ${b.model||"Pendek"} | ${b.ukuran} | ${b.warna||"Putih"}\n`;
+    daftar += `   → Total: Rp ${totalItem.toLocaleString('id-ID')} | ${statusItem}\n\n`;
+    nomorUrut++;
+  });
+
+  let statusBayar = Array.from(statusGabungan).join(", ");
+  let sisaTagihan = totalBayar - totalUangMasuk;
+
+  let hasil = document.getElementById("teksBroadcast").value;
+  hasil = hasil.replace("{{DAFTAR_PESANAN}}", daftar.trim());
+  hasil = hasil.replace("{{TOTAL_BAYAR}}", totalBayar.toLocaleString('id-ID'));
+  hasil = hasil.replace("{{STATUS_BAYAR}}", statusBayar);
+  hasil = hasil.replace("{{SISA_TAGIHAN}}", sisaTagihan.toLocaleString('id-ID'));
+
+  const kotakHasil = document.getElementById("hasilPreview");
+  kotakHasil.textContent = hasil;
+  kotakHasil.style.display = "block";
+  tampilkanPesan(`✅ Preview dibuat dari ${daftarTerpilih.size} pesanan terpilih!`, "sukses");
+}
+
 function salinDataPembeli(){
   let teks = "📋 DAFTAR PEMBELI PO KAOS HAUL KE-28 AL-MU'AWANAH\n";
   teks += "========================================\n\n";
@@ -433,28 +516,6 @@ function salinDataPembeli(){
     document.body.appendChild(txtArea); txtArea.select(); document.execCommand("copy"); document.body.removeChild(txtArea);
     tampilkanPesan("✅ Data berhasil disalin!", "sukses");
   });
-}
-
-function previewPesan(){
-  let daftar = "";
-  let totalBayar = 0;
-  let statusBayar = "Belum Ada Pesanan";
-  data.forEach((b,i)=>{
-    if((b.status||"Aktif")==="Batal") return;
-    const jenis = b.ukuran==="XXL"?"xxl":"biasa";
-    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
-    const jml = b.jumlah||1;
-    totalBayar += harga*jml;
-    daftar += `${i+1}. ${b.namaPembeli||"Pembeli"}: ${jml} pcs ${b.model} ${b.ukuran} ${b.warna}\n`;
-  });
-  if(totalBayar>0) statusBayar = "Silakan Lakukan Pembayaran Sebelum Pengiriman";
-  let hasil = document.getElementById("teksBroadcast").value;
-  hasil = hasil.replace("{{DAFTAR_PESANAN}}", daftar||"Belum ada pesanan tercatat");
-  hasil = hasil.replace("{{TOTAL_BAYAR}}", totalBayar.toLocaleString('id-ID'));
-  hasil = hasil.replace("{{STATUS_BAYAR}}", statusBayar);
-  const kotakHasil = document.getElementById("hasilPreview");
-  kotakHasil.textContent = hasil;
-  kotakHasil.style.display = "block";
 }
 
 function unduhExcel(){
