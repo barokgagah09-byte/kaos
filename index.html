@@ -2,162 +2,546 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catatan PO Kaos - Teroptimasi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Catatan PO Kaos - Ukuran Besar</title>
 <style>
-    /* Styling tetap mempertahankan desain Anda namun lebih ringan */
-    *{box-sizing:border-box; font-family:'Segoe UI', sans-serif; margin:0; padding:0;}
-    body{padding:10px; background:#f0f4f8; font-size:14px;}
-    .card{background:white; padding:15px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-bottom:15px;}
-    .wadah-tabel{overflow-x:auto; margin-top:10px; border:1px solid #ddd; border-radius:8px;}
-    table{width: 2500px; border-collapse:collapse;}
-    th{background:#1e40af; color:white; padding:10px; text-align:center;}
-    td{border:1px solid #e2e8f0; padding:5px; text-align:center;}
-    input,select{width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px;}
-    .tombol{padding:10px 15px; border:none; border-radius:6px; cursor:pointer; font-weight:600; margin:3px; color:white;}
-    .ringkas{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:10px;}
-    .p7{background:#1e40af; color:white; padding:10px; border-radius:8px; grid-column:1 / -1; text-align:center;}
-    #fileInput{display:none;}
+*{box-sizing:border-box; font-family:'Segoe UI', Roboto, Arial,sans-serif; margin:0; padding:0;}
+html{font-size:16px;}
+body{max-width:100%; padding:12px 8px; background:#f0f4f8; min-height:100vh;}
+
+h1{text-align:center; color:#1e293b; margin-bottom:10px; font-size:24px; font-weight:700;}
+.info{background:linear-gradient(135deg,#fffbeb,#fef3c7); padding:14px; border-radius:12px; margin-bottom:16px; font-size:15px; line-height:1.8; border-left:4px solid #f59e0b; box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+
+.card{background:white; padding:16px; border-radius:14px; box-shadow:0 4px 12px rgba(15,23,42,0.08); margin-bottom:16px; overflow:hidden; transition:transform 0.2s ease;}
+.card:active{transform:scale(0.995);}
+h3{color:#1e293b; margin-bottom:14px; font-size:20px; font-weight:600; display:flex; align-items:center; gap:8px;}
+h4{color:#334155; margin:18px 0 10px 0; font-size:17px; font-weight:600;}
+
+table{min-width: 2700px; table-layout: fixed; border-collapse:separate; border-spacing:0; margin-bottom:12px; border-radius:10px; overflow:hidden;}
+th,td{border:1px solid #e2e8f0; padding:10px 4px; text-align:center; font-size:15px; white-space:nowrap; vertical-align:middle;}
+th{background:linear-gradient(135deg,#1e40af,#3b82f6); color:white; font-weight:600; font-size:15px; position:sticky; top:0; z-index:10;}
+tr:nth-child(even){background:#f8fafc;}
+tr:hover{background:#eff6ff; transition:background 0.15s ease;}
+
+.tabel-ringkas {min-width: 100%; table-layout: auto; border-radius:10px;}
+.tabel-ringkas th {background:linear-gradient(135deg,#475569,#64748b);}
+
+input,select,textarea{width:100%; padding:10px 8px; border:1px solid #cbd5e1; border-radius:8px; font-size:15px; background:#fcfdff; transition:all 0.2s ease;}
+input:focus, select:focus, textarea:focus{outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.15); background:#fff;}
+input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; display:block;}
+
+.tombol{padding:12px 10px; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; margin:5px 3px; min-height:48px; transition:all 0.2s ease; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+.tombol:active{transform:scale(0.97); box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+.tambah{background:linear-gradient(135deg,#16a34a,#22c55e); color:white;}
+.simpan{background:linear-gradient(135deg,#9333ea,#a855f7); color:white;}
+.muat{background:linear-gradient(135deg,#0d9488,#14b8a6); color:white;}
+.cetak{background:linear-gradient(135deg,#d97706,#f59e0b); color:white;}
+.salin{background:linear-gradient(135deg,#2563eb,#3b82f6); color:white;}
+.broadcast{background:linear-gradient(135deg,#7c3aed,#8b5cf6); color:white;}
+.pilih{background:linear-gradient(135deg,#059669,#10b981); color:white; font-size:14px; min-height:40px; padding:8px 12px;}
+.hapus{background:linear-gradient(135deg,#dc2626,#ef4444); color:white; padding:8px 14px; font-size:20px; width:auto; min-height:36px;}
+
+.ringkas{display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:10px;}
+.ringkas div{padding:14px 10px; border-radius:12px; color:white; text-align:center; font-size:14px; line-height:1.5; font-weight:500; box-shadow:0 3px 8px rgba(0,0,0,0.1);}
+.p1{background:linear-gradient(135deg,#7e22ce,#a855f7);}
+.p2{background:linear-gradient(135deg,#1d4ed8,#3b82f6);}
+.p3{background:linear-gradient(135deg,#047857,#10b981);}
+.p4{background:linear-gradient(135deg,#c2410c,#f97316);}
+.p5{background:linear-gradient(135deg,#15803d,#22c55e);}
+.p6{background:linear-gradient(135deg,#b91c1c,#ef4444);}
+.p7{background:linear-gradient(135deg,#1e40af,#3b82f6); font-weight:bold; font-size:16px; grid-column:1 / -1;}
+
+.pesan{margin-top:12px; padding:12px; border-radius:10px; text-align:center; font-size:15px; display:none; font-weight:500;}
+.sukses{background:#dcfce7; color:#166534; border:1px solid #bbf7d0;}
+.error{background:#fef2f2; color:#991b1b; border:1px solid #fecaca;}
+.baris-batal{background:#fef2f2 !important; text-decoration:line-through; opacity:0.7;}
+#fileInput{display:none;}
+
+.petunjuk-scroll { font-size:13px; color:#64748b; margin-bottom:6px; display:block; text-align:right; font-style:italic;}
+
+.kotak-cari {margin-bottom:14px; padding:12px; background:#f1f5f9; border-radius:10px;}
+.kotak-cari input {text-align:left; padding-left:14px; background:#fff;}
+
+.kotak-rekap, .kotak-broadcast {margin-top:14px; padding:12px; background:#f8fafc; border-radius:10px; border:1px solid #e2e8f0;}
+.kotak-broadcast textarea {min-height:120px; resize:vertical; margin-bottom:8px;}
+.info-pilih{font-size:13px; color:#475569; margin-bottom:8px; display:block;}
+
+.wadah-tabel{overflow-x:auto; border-radius:10px; -webkit-overflow-scrolling:touch;}
 </style>
 </head>
 <body>
 
+<h1>📦 CATATAN PRE ORDER KAOS</h1>
+<div class="info">
+⚠️ ATURAN HARGA & MODAL:<br>
+• Pendek Biasa: Jual 115.000 | Modal 70.000<br>
+• Pendek XXL: Jual 120.000 | Modal 75.000<br>
+• Panjang Biasa: Jual 125.000 | Modal 75.000<br>
+• Panjang XXL: Jual 130.000 | Modal 80.000<br>
+• Bagi hasil reseller: <b>Rp 10.000 / pcs</b><br>
+✅ <b>WAJIB:</b> Klik tombol <b>💾 Simpan Cadangan</b> sesudah selesai mencatat!
+</div>
+
 <div class="card">
-  <h1>📦 CATATAN PO KAOS</h1>
-  <input type="text" id="inputCari" oninput="debouncePencarian()" placeholder="🔍 Cari nama, reseller, atau status..." style="padding:12px; margin-top:10px; border:2px solid #3b82f6;">
+  <h3>📋 Daftar Pesanan</h3>
   
-  <div class="wadah-tabel">
-    <table id="tabelData">
-      <thead>
-        <tr>
-          <th>Pilih</th><th>No</th><th>Nama Pembeli</th><th>Reseller</th><th>Status</th><th>Ukuran</th>
-          <th>Model</th><th>Warna</th><th>Jumlah</th><th>Total Jual</th><th>Uang Masuk</th>
-          <th>Sisa</th><th>Status Bayar</th><th>Tanggal</th><th>Keterangan</th><th>Kirim</th><th>Modal</th><th>Bagi Reseller</th><th>Untung</th><th>Hapus</th>
-        </tr>
-      </thead>
-      <tbody id="isiTabel"></tbody>
-    </table>
+  <div class="kotak-cari">
+    <input type="text" id="inputCari" oninput="tampilkanTabel()" placeholder="🔍 Cari nama, reseller, ukuran, warna, status...">
   </div>
-  <div style="margin-top:10px;">
-    <button class="tombol" onclick="tambahBaris()" style="background:#16a34a;">+ Tambah</button>
-    <button class="tombol" onclick="simpanCadangan()" style="background:#9333ea;">💾 Simpan</button>
-    <button class="tombol" onclick="document.getElementById('fileInput').click()" style="background:#0d9488;">📂 Buka</button>
-    <button class="tombol" onclick="unduhExcel()" style="background:#d97706;">📄 Excel</button>
+  <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+    <button class="tombol pilih" onclick="pilihSemua()">✅ Pilih Semua</button>
+    <button class="tombol pilih" onclick="batalSemua()">❌ Batal Semua Pilihan</button>
+  </div>
+
+  <span class="petunjuk-scroll">↔️ Geser kanan-kiri untuk melihat kolom penuh</span>
+  <div class="wadah-tabel">
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 55px;">☑️ Pilih</th>
+        <th style="width: 50px;">No</th>
+        <th style="width: 180px;">Nama Pembeli</th>
+        <th style="width: 150px;">Nama Reseller</th>
+        <th style="width: 130px;">Status</th>
+        <th style="width: 100px;">Ukuran</th>
+        <th style="width: 170px;">Model</th>
+        <th style="width: 120px;">Warna</th>
+        <th style="width: 90px;">Jumlah</th>
+        <th style="width: 140px;">Total Jual</th>
+        <th style="width: 140px;">Uang Masuk</th>
+        <th style="width: 140px;">Sisa Tagihan</th>
+        <th style="width: 150px;">Status Bayar</th>
+        <th style="width: 170px;">Tanggal Bayar</th>
+        <th style="width: 200px;">Keterangan</th>
+        <th style="width: 160px;">Status Kirim</th>
+        <th style="width: 130px;">Modal</th>
+        <th style="width: 150px;">Bagian Reseller</th>
+        <th style="width: 160px;">Keuntungan Kamu</th>
+        <th style="width: 80px;">Hapus</th>
+      </tr>
+    </thead>
+    <tbody id="isiTabel"></tbody>
+  </table>
+  </div>
+  <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+  <button class="tombol tambah" onclick="tambahBaris()">+ Tambah Pesanan</button>
+  <button class="tombol simpan" onclick="simpanCadangan()">💾 Simpan Cadangan</button>
+  <button class="tombol muat" onclick="document.getElementById('fileInput').click()">📂 Buka Cadangan</button>
+  <button class="tombol cetak" onclick="unduhExcel()">📄 Unduh Excel</button>
+  <button class="tombol salin" onclick="salinDataPembeli()">📋 Salin Data Pembeli</button>
   </div>
   <input type="file" id="fileInput" accept=".json" onchange="bukaCadangan(event)">
+  <div id="kotakPesan" class="pesan"></div>
 </div>
 
 <div class="card">
-    <h3>📊 RANGKUMAN</h3>
-    <div class="ringkas" id="ringkasan"></div>
-    <div class="p7" style="margin-top:10px;">💸 KEUNTUNGAN BERSIH: Rp <span id="totUntung">0</span></div>
-</div>
+  <h3>📊 RANGKUMAN OTOMATIS</h3>
+  <div class="ringkas" style="margin-bottom: 16px;">
+    <div class="p1">Total Pesanan<br><span id="totPesanan">0</span> pcs</div>
+    <div class="p2">Ukuran S/M/L/XL/XXL<br><span id="totUkuran">0/0/0/0/0</span></div>
+    <div class="p3">Pendek / Panjang<br><span id="totModel">0 / 0</span></div>
+    <div class="p4">Uang Reseller<br>Rp <span id="totReseller">0</span></div>
+    <div class="p5">Uang Sudah Masuk<br>Rp <span id="totMasuk">0</span></div>
+    <div class="p6">Total Modal<br>Rp <span id="totModal">0</span></div>
+    <div class="p7">💸 KEUNTUNGAN BERSIH<br>Rp <span id="totUntung">0</span></div>
+  </div>
 
-<div class="card">
-    <h3>📢 PREVIEW PESAN</h3>
-    <textarea id="teksBroadcast" style="width:100%; height:100px; margin-top:10px;">Assalamu'alaikum. Berikut rincian pesanan Anda: {{DAFTAR_PESANAN}} | Total: {{TOTAL_BAYAR}} | Status: {{STATUS_BAYAR}} | Sisa: {{SISA_TAGIHAN}}. Pelunasan maks: Jumat, 14 Agustus 2026.</textarea>
-    <button class="tombol" onclick="buatPreviewPesan()" style="background:#7c3aed; width:100%; margin-top:10px;">👁️ Buat Preview</button>
-    <div id="hasilPreview" style="margin-top:10px; white-space:pre-wrap; background:#f8fafc; padding:10px; display:none;"></div>
+  <h4>📋 DETAIL PRODUKSI (PER UKURAN & MODEL)</h4>
+  <table class="tabel-ringkas">
+    <thead>
+      <tr>
+        <th>Ukuran</th>
+        <th>Lengan Pendek</th>
+        <th>Lengan Panjang</th>
+      </tr>
+    </thead>
+    <tbody id="detailUkuranModel"></tbody>
+  </table>
+
+  <h4>👥 REKAP TOTAL PER RESELLER</h4>
+  <div class="kotak-rekap" id="rekapReseller">Memuat data...</div>
+
+  <h4>📢 PREVIEW PESAN UNDANGAN / KONFIRMASI</h4>
+  <div class="kotak-broadcast">
+    <span class="info-pilih">💡 Centang dulu pesanan yang ingin dimasukkan ke pesan, lalu klik tombol di bawah</span>
+    <textarea id="teksBroadcast" placeholder="Ketik pesan yang ingin disampaikan ke pembeli/reseller...">Assalamu'alaikum Wr. Wb.
+
+Terima kasih atas pemesanan Kaos Haul Ke-28 Al-Mu'awanah ya 🙏
+
+Berikut rincian pesanan Anda:
+{{DAFTAR_PESANAN}}
+
+Total Pembayaran: Rp {{TOTAL_BAYAR}}
+Status Pembayaran: {{STATUS_BAYAR}}
+Sisa Pembayaran: Rp {{SISA_TAGIHAN}}
+
+Kami akan segera proses pesanan Anda setelah pembayaran lunas.
+
+Wassalamu'alaikum Wr. Wb.</textarea>
+    <button class="tombol broadcast" onclick="buatPreviewPesan()">👁️ Buat Preview Dari Pesanan Terpilih</button>
+    <div id="hasilPreview" style="margin-top:10px; padding:12px; background:#fff; border-radius:8px; white-space:pre-wrap; display:none; border:1px solid #cbd5e1;"></div>
+  </div>
 </div>
 
 <script>
-const KUNCI_SIMPAN = "Catatan_PO_Kaos_2026";
-let data = JSON.parse(localStorage.getItem(KUNCI_SIMPAN)) || [];
-let daftarIndexTerpilih = [];
-let timer;
-
 const BAGI_HASIL = 10000;
-const DAFTAR_HARGA = {pendek: {biasa:115000, xxl:120000}, panjang: {biasa:125000, xxl:130000}};
-const DAFTAR_MODAL = {pendek: {biasa:70000, xxl:75000}, panjang: {biasa:75000, xxl:80000}};
+const DAFTAR_HARGA = {
+  pendek: {biasa:115000, xxl:120000},
+  panjang: {biasa:125000, xxl:130000}
+};
+const DAFTAR_MODAL = {
+  pendek: {biasa:70000, xxl:75000},
+  panjang: {biasa:75000, xxl:80000}
+};
 
-function tampilkanTabel(filter = "") {
-    const isi = document.getElementById("isiTabel");
-    const keyword = filter.toLowerCase();
-    isi.innerHTML = "";
+let data = [];
+let daftarIndexTerpilih = [];
+const KUNCI_SIMPAN = "Catatan_PO_Kaos_2026";
+
+window.onload = () => {
+  const dataTersimpan = localStorage.getItem(KUNCI_SIMPAN);
+  if(dataTersimpan) {
+    try {
+      data = JSON.parse(dataTersimpan);
+      tampilkanPesan("✅ Data berhasil dimuat!", "sukses");
+    } catch {
+      tampilkanPesan("⚠️ Data lama rusak, silakan buka file cadangan", "error");
+    }
+  }
+  tampilkanTabel();
+};
+
+function simpanOtomatis(){
+  localStorage.setItem(KUNCI_SIMPAN, JSON.stringify(data));
+}
+
+function simpanCadangan(){
+  const berkas = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const tautan = document.createElement("a");
+  tautan.href = URL.createObjectURL(berkas);
+  const hariIni = new Date().toISOString().slice(0,10);
+  tautan.download = `Cadangan_PO_Kaos_${hariIni}.json`;
+  tautan.click();
+  tampilkanPesan("✅ File cadangan tersimpan di HP!", "sukses");
+}
+
+function bukaCadangan(peristiwa){
+  const berkas = peristiwa.target.files[0];
+  if(!berkas) return;
+  const baca = new FileReader();
+  baca.onload = function(e){
+    try {
+      data = JSON.parse(e.target.result);
+      daftarIndexTerpilih = [];
+      simpanOtomatis();
+      tampilkanTabel();
+      tampilkanPesan("✅ Data dipulihkan dari cadangan!", "sukses");
+    } catch {
+      tampilkanPesan("❌ File tidak cocok atau rusak!", "error");
+    }
+  };
+  baca.readAsText(berkas);
+}
+
+function tambahBaris(){
+  data.push({
+    namaPembeli:"", namaReseller:"", status:"Aktif", ukuran:"S",
+    model:"Pendek", warna:"Putih", jumlah:1, bayar:0, tanggal:"", keterangan:"", kirim:"Belum Dikirim"
+  });
+  tampilkanTabel();
+  simpanOtomatis();
+}
+
+function pilihSemua(){
+  daftarIndexTerpilih = data.map((_,i) => i);
+  tampilkanTabel();
+  tampilkanPesan("✅ Semua pesanan terpilih!", "sukses");
+}
+
+function batalSemua(){
+  daftarIndexTerpilih = [];
+  tampilkanTabel();
+  document.getElementById("hasilPreview").style.display = "none";
+  tampilkanPesan("❌ Pilihan dibatalkan semua!", "sukses");
+}
+
+function ubahStatusPilihan(index, status){
+  if(status){
+    if(!daftarIndexTerpilih.includes(index)) daftarIndexTerpilih.push(index);
+  }else{
+    daftarIndexTerpilih = daftarIndexTerpilih.filter(i => i !== index);
+  }
+}
+
+function tampilkanTabel(){
+  const isi = document.getElementById("isiTabel");
+  const kataKunci = document.getElementById("inputCari").value.toLowerCase();
+  isi.innerHTML = "";
+  
+  data.forEach((baris, nomor) => {
+    const jenisUkuran = baris.ukuran === "XXL" ? "xxl" : "biasa";
+    const hargaSatuan = DAFTAR_HARGA[(baris.model||"Pendek").toLowerCase()][jenisUkuran];
+    const totalJual = hargaSatuan * (baris.jumlah||1);
+    const sisa = totalJual - (baris.bayar||0);
     
-    data.forEach((b, i) => {
-        if (keyword && !b.namaPembeli.toLowerCase().includes(keyword) && !b.namaReseller.toLowerCase().includes(keyword)) return;
+    let teksBayarTeks = "";
+    if((baris.bayar||0) === 0) teksBayarTeks = "belum bayar";
+    else if(sisa > 0) teksBayarTeks = "menyicil";
+    else teksBayarTeks = "lunas";
 
-        const jenis = b.ukuran === "XXL" ? "xxl" : "biasa";
-        const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
-        const modal = DAFTAR_MODAL[(b.model||"Pendek").toLowerCase()][jenis];
-        const total = harga * (b.jumlah||1);
-        const untung = total - (modal * (b.jumlah||1)) - (BAGI_HASIL * (b.jumlah||1));
-        
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td><input type="checkbox" onchange="ubahStatusPilihan(${i}, this.checked)"></td>
-            <td>${i+1}</td>
-            <td><input type="text" value="${b.namaPembeli||''}" onchange="updateData(${i}, 'namaPembeli', this.value)"></td>
-            <td><input type="text" value="${b.namaReseller||''}" onchange="updateData(${i}, 'namaReseller', this.value)"></td>
-            <td><select onchange="updateData(${i}, 'status', this.value)"><option ${b.status=='Aktif'?'selected':''}>Aktif</option><option ${b.status=='Batal'?'selected':''}>Batal</option></select></td>
-            <td><select onchange="updateData(${i}, 'ukuran', this.value)"><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option></select></td>
-            <td><select onchange="updateData(${i}, 'model', this.value)"><option>Pendek</option><option>Panjang</option></select></td>
-            <td><input type="text" value="${b.warna||'Putih'}" onchange="updateData(${i}, 'warna', this.value)"></td>
-            <td><input type="number" value="${b.jumlah||1}" onchange="updateData(${i}, 'jumlah', this.value)"></td>
-            <td>${total.toLocaleString()}</td>
-            <td><input type="number" value="${b.bayar||0}" onchange="updateData(${i}, 'bayar', this.value)"></td>
-            <td>${(total - (b.bayar||0)).toLocaleString()}</td>
-            <td>${(b.bayar||0) >= total ? "Lunas" : "Menyicil"}</td>
-            <td><input type="date" value="${b.tanggal||''}" onchange="updateData(${i}, 'tanggal', this.value)"></td>
-            <td><input type="text" value="${b.keterangan||''}" onchange="updateData(${i}, 'keterangan', this.value)"></td>
-            <td><select onchange="updateData(${i}, 'kirim', this.value)"><option ${b.kirim=='Belum'?'selected':''}>Belum</option><option ${b.kirim=='Sudah'?'selected':''}>Sudah</option></select></td>
-            <td>${(modal*(b.jumlah||1)).toLocaleString()}</td>
-            <td>${(BAGI_HASIL*(b.jumlah||1)).toLocaleString()}</td>
-            <td>${untung.toLocaleString()}</td>
-            <td><button onclick="hapusBaris(${i})">×</button></td>
-        `;
-        isi.appendChild(tr);
-    });
-    hitungRingkasan();
+    const matchNama = (baris.namaPembeli||'').toLowerCase().includes(kataKunci);
+    const matchReseller = (baris.namaReseller||'').toLowerCase().includes(kataKunci);
+    const matchUkuran = (baris.ukuran||'').toLowerCase().includes(kataKunci);
+    const matchWarna = (baris.warna||'').toLowerCase().includes(kataKunci);
+    const matchKirim = (baris.kirim||'Belum Dikirim').toLowerCase().includes(kataKunci);
+    const matchBayar = teksBayarTeks.includes(kataKunci);
+    
+    if (kataKunci && !matchNama && !matchReseller && !matchUkuran && !matchWarna && !matchKirim && !matchBayar) return;
+
+    const modalSatuan = DAFTAR_MODAL[(baris.model||"Pendek").toLowerCase()][jenisUkuran];
+    const totalModal = modalSatuan * (baris.jumlah||1);
+    const bagianReseller = BAGI_HASIL * (baris.jumlah||1);
+    const untung = totalJual - totalModal - bagianReseller;
+    const kelas = (baris.status||"Aktif") === "Batal" ? "baris-batal" : "";
+    const terpilih = daftarIndexTerpilih.includes(nomor) ? "checked" : "";
+
+    let teksBayarHtml, warnaBayar;
+    if((baris.bayar||0) === 0) {teksBayarHtml = "🔴 Belum Bayar"; warnaBayar = "#dc3545";}
+    else if(sisa > 0) {teksBayarHtml = "🟡 Menyicil"; warnaBayar = "#d97706";}
+    else {teksBayarHtml = "🟢 Lunas"; warnaBayar = "#166534";}
+
+    isi.innerHTML += `
+    <tr class="${kelas}">
+      <td><input type="checkbox" ${terpilih} onchange="ubahStatusPilihan(${nomor}, this.checked)"></td>
+      <td>${nomor+1}</td>
+      <td><input type="text" value="${baris.namaPembeli||''}" onchange="ubahData(${nomor},'namaPembeli',this.value)"></td>
+      <td><input type="text" value="${baris.namaReseller||''}" onchange="ubahData(${nomor},'namaReseller',this.value)"></td>
+      <td><select onchange="ubahData(${nomor},'status',this.value)">
+        <option value="Aktif" ${(baris.status||'Aktif')==='Aktif'?'selected':''}>✅ Aktif</option>
+        <option value="Batal" ${(baris.status||'Aktif')==='Batal'?'selected':''}>❌ Batal</option>
+      </select></td>
+      <td><select onchange="ubahData(${nomor},'ukuran',this.value)">
+        <option value="S" ${baris.ukuran==='S'?'selected':''}>S</option>
+        <option value="M" ${baris.ukuran==='M'?'selected':''}>M</option>
+        <option value="L" ${baris.ukuran==='L'?'selected':''}>L</option>
+        <option value="XL" ${baris.ukuran==='XL'?'selected':''}>XL</option>
+        <option value="XXL" ${baris.ukuran==='XXL'?'selected':''}>XXL</option>
+      </select></td>
+      <td><select onchange="ubahData(${nomor},'model',this.value)">
+        <option value="Pendek" ${(baris.model||'Pendek')==='Pendek'?'selected':''}>Lengan Pendek</option>
+        <option value="Panjang" ${(baris.model||'Pendek')==='Panjang'?'selected':''}>Lengan Panjang</option>
+      </select></td>
+      <td><select onchange="ubahData(${nomor},'warna',this.value)">
+        <option value="Putih" ${(baris.warna||'Putih')==='Putih'?'selected':''}>Putih</option>
+        <option value="Hitam" ${(baris.warna||'Putih')==='Hitam'?'selected':''}>Hitam</option>
+      </select></td>
+      <td><input type="number" min="1" value="${baris.jumlah||1}" onchange="ubahData(${nomor},'jumlah',Number(this.value))"></td>
+      <td>Rp ${totalJual.toLocaleString('id-ID')}</td>
+      <td><input type="number" min="0" value="${baris.bayar||0}" onchange="ubahData(${nomor},'bayar',Number(this.value))"></td>
+      <td>Rp ${sisa.toLocaleString('id-ID')}</td>
+      <td style="color:${warnaBayar}; font-weight:bold;">${teksBayarHtml}</td>
+      <td><input type="date" value="${baris.tanggal||''}" onchange="ubahData(${nomor},'tanggal',this.value)"></td>
+      <td><input type="text" value="${baris.keterangan||''}" onchange="ubahData(${nomor},'keterangan',this.value)"></td>
+      <td><select onchange="ubahData(${nomor},'kirim',this.value)">
+        <option value="Belum Dikirim" ${(baris.kirim||'Belum Dikirim')==='Belum Dikirim'?'selected':''}>📦 Belum Dikirim</option>
+        <option value="Sudah Dikirim" ${(baris.kirim||'Belum Dikirim')==='Sudah Dikirim'?'selected':''}>🚚 Sudah Dikirim</option>
+      </select></td>
+      <td>Rp ${totalModal.toLocaleString('id-ID')}</td>
+      <td>Rp ${bagianReseller.toLocaleString('id-ID')}</td>
+      <td>Rp ${untung.toLocaleString('id-ID')}</td>
+      <td><button class="tombol hapus" onclick="hapusBaris(${nomor})">×</button></td>
+    </tr>`;
+  });
+  hitungRingkasan();
 }
 
-function debouncePencarian() {
-    clearTimeout(timer);
-    timer = setTimeout(() => { tampilkanTabel(document.getElementById("inputCari").value); }, 300);
+function ubahData(index, kolom, nilai){
+  data[index][kolom] = nilai;
+  tampilkanTabel();
+  simpanOtomatis();
 }
 
-function updateData(i, k, v) { data[i][k] = v; localStorage.setItem(KUNCI_SIMPAN, JSON.stringify(data)); tampilkanTabel(); }
-function tambahBaris() { data.push({namaPembeli:"", namaReseller:"", status:"Aktif", ukuran:"S", model:"Pendek", warna:"Putih", jumlah:1, bayar:0, kirim:"Belum"}); tampilkanTabel(); }
-function hapusBaris(i) { if(confirm("Hapus?")) { data.splice(i,1); localStorage.setItem(KUNCI_SIMPAN, JSON.stringify(data)); tampilkanTabel(); } }
-function ubahStatusPilihan(i, checked) { if(checked) daftarIndexTerpilih.push(i); else daftarIndexTerpilih = daftarIndexTerpilih.filter(idx => idx != i); }
-
-function hitungRingkasan() {
-    let tP=0, tM=0, tUntung=0;
-    data.forEach(b => {
-        const j = b.ukuran=="XXL"?"xxl":"biasa";
-        const h = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][j];
-        tP += Number(b.jumlah||1);
-        tM += Number(b.bayar||0);
-        tUntung += (h - DAFTAR_MODAL[(b.model||"Pendek").toLowerCase()][j] - BAGI_HASIL) * (b.jumlah||1);
-    });
-    document.getElementById("totUntung").textContent = tUntung.toLocaleString();
+function hapusBaris(index){
+  if(confirm("Yakin hapus pesanan ini?")){
+    data.splice(index,1);
+    daftarIndexTerpilih = daftarIndexTerpilih
+      .filter(i => i !== index)
+      .map(i => i >= index ? i - 1 : i);
+    tampilkanTabel();
+    simpanOtomatis();
+  }
 }
 
-function buatPreviewPesan() {
-    if(daftarIndexTerpilih.length == 0) return alert("Centang pesanan dulu!");
-    let dP="", tB=0, sB=0;
-    daftarIndexTerpilih.forEach(i => {
-        const b = data[i];
-        const j = b.ukuran=="XXL"?"xxl":"biasa";
-        const h = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][j];
-        tB += h*(b.jumlah||1); sB += Number(b.bayar||0);
-        dP += `${b.namaPembeli} (${b.model} ${b.ukuran}), `;
-    });
-    let p = document.getElementById("teksBroadcast").value
-        .replace("{{DAFTAR_PESANAN}}", dP)
-        .replace("{{TOTAL_BAYAR}}", tB.toLocaleString())
-        .replace("{{STATUS_BAYAR}}", (tB-sB <= 0 ? "Lunas" : "Menyicil"))
-        .replace("{{SISA_TAGIHAN}}", (tB-sB).toLocaleString());
-    const hP = document.getElementById("hasilPreview");
-    hP.textContent = p; hP.style.display = "block";
+function hitungRingkasan(){
+  let totPesanan=0, totS=0,totM=0,totL=0,totXL=0,totXXL=0;
+  let totPendek=0,totPanjang=0,totReseller=0,totMasuk=0,totModal=0,totUntung=0;
+  let rekapResellerObj = {};
+  
+  let matriksDetail = {
+    "S": { Pendek: 0, Panjang: 0 },
+    "M": { Pendek: 0, Panjang: 0 },
+    "L": { Pendek: 0, Panjang: 0 },
+    "XL": { Pendek: 0, Panjang: 0 },
+    "XXL": { Pendek: 0, Panjang: 0 }
+  };
+  
+  data.forEach(b => {
+    totMasuk += b.bayar||0;
+    if((b.status||"Aktif")==="Batal") return;
+    const jenis = b.ukuran==="XXL"?"xxl":"biasa";
+    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
+    const modal = DAFTAR_MODAL[(b.model||"Pendek").toLowerCase()][jenis];
+    const jml = b.jumlah||1;
+    const namaRes = (b.namaReseller||"Reseller Umum").trim();
+    
+    totPesanan += jml;
+    if(b.ukuran==='S')totS+=jml; if(b.ukuran==='M')totM+=jml; if(b.ukuran==='L')totL+=jml; if(b.ukuran==='XL')totXL+=jml; if(b.ukuran==='XXL')totXXL+=jml;
+    if((b.model||"Pendek")==="Pendek")totPendek+=jml; else totPanjang+=jml;
+    
+    const uk = b.ukuran || "S";
+    const mod = b.model || "Pendek";
+    if(matriksDetail[uk]) matriksDetail[uk][mod] += jml;
+
+    totReseller += BAGI_HASIL * jml;
+    totModal += modal * jml;
+    totUntung += (harga * jml) - (modal * jml) - (BAGI_HASIL * jml);
+
+    if(!rekapResellerObj[namaRes]) rekapResellerObj[namaRes] = {jumlah:0, totalBagi:0};
+    rekapResellerObj[namaRes].jumlah += jml;
+    rekapResellerObj[namaRes].totalBagi += BAGI_HASIL * jml;
+  });
+
+  document.getElementById("totPesanan").textContent = totPesanan;
+  document.getElementById("totUkuran").textContent = `${totS}/${totM}/${totL}/${totXL}/${totXXL}`;
+  document.getElementById("totModel").textContent = `${totPendek} / ${totPanjang}`;
+  document.getElementById("totReseller").textContent = totReseller.toLocaleString('id-ID');
+  document.getElementById("totMasuk").textContent = totMasuk.toLocaleString('id-ID');
+  document.getElementById("totModal").textContent = totModal.toLocaleString('id-ID');
+  document.getElementById("totUntung").textContent = totUntung.toLocaleString('id-ID');
+
+  const isiDetail = document.getElementById("detailUkuranModel");
+  isiDetail.innerHTML = "";
+  for (let uk in matriksDetail) {
+    isiDetail.innerHTML += `
+      <tr>
+        <td style="background:#f1f5f9; font-weight:bold; color:#1e293b;">Ukuran ${uk}</td>
+        <td>${matriksDetail[uk].Pendek} pcs</td>
+        <td style="color:#c2410c;">${matriksDetail[uk].Panjang} pcs</td>
+      </tr>`;
+  }
+
+  const kotakRekap = document.getElementById("rekapReseller");
+  kotakRekap.innerHTML = "";
+  if(Object.keys(rekapResellerObj).length === 0) {
+    kotakRekap.innerHTML = "Belum ada data reseller";
+  } else {
+    for(let res in rekapResellerObj) {
+      kotakRekap.innerHTML += `✅ <b>${res}</b>: ${rekapResellerObj[res].jumlah} pcs | Hak Bagi: Rp ${rekapResellerObj[res].totalBagi.toLocaleString('id-ID')}<br>`;
+    }
+  }
 }
 
-function simpanCadangan(){ const b = new Blob([JSON.stringify(data)],{type:'application/json'}); const a = document.createElement("a"); a.href=URL.createObjectURL(b); a.download="Backup_PO.json"; a.click(); }
-function bukaCadangan(e){ const r = new FileReader(); r.onload = (ev) => { data = JSON.parse(ev.target.result); localStorage.setItem(KUNCI_SIMPAN, JSON.stringify(data)); tampilkanTabel(); }; r.readAsText(e.target.files[0]); }
-function unduhExcel(){ let csv = "Nama;Jumlah;Total\n" + data.map(b=>`${b.namaPembeli};${b.jumlah};${b.jumlah*115000}`).join("\n"); const b = new Blob([csv],{type:'text/csv'}); const a = document.createElement("a"); a.href=URL.createObjectURL(b); a.download="Data.csv"; a.click(); }
+function buatPreviewPesan(){
+  if(daftarIndexTerpilih.length === 0){
+    tampilkanPesan("⚠️ Silakan centang dulu pesanan yang ingin dimasukkan ke pesan!", "error");
+    return;
+  }
 
-tampilkanTabel();
+  let daftarPesanan = "";
+  let totalBayarSemua = 0;
+  let totalSudahBayar = 0;
+  let nomorUrut = 1;
+  let daftarStatus = new Set();
+
+  daftarIndexTerpilih.forEach(idx => {
+    const b = data[idx];
+    if((b.status||"Aktif")==="Batal") return;
+    const jenis = b.ukuran==="XXL"?"xxl":"biasa";
+    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
+    const jml = b.jumlah||1;
+    const totalItem = harga * jml;
+    totalBayarSemua += totalItem;
+    totalSudahBayar += b.bayar||0;
+
+    let statusItem = "";
+    const sisaItem = totalItem - (b.bayar||0);
+    if((b.bayar||0) === 0) statusItem = "🔴 Belum Bayar";
+    else if(sisaItem > 0) statusItem = "🟡 Menyicil";
+    else statusItem = "🟢 Lunas";
+    daftarStatus.add(statusItem);
+
+    daftarPesanan += `${nomorUrut}. ${b.namaPembeli||"Pembeli"} (Reseller: ${b.namaReseller||"Umum"})\n`;
+    daftarPesanan += `   → ${jml} pcs | ${b.model||"Pendek"} | ${b.ukuran} | ${b.warna||"Putih"}\n`;
+    daftarPesanan += `   → Total: Rp ${totalItem.toLocaleString('id-ID')} | ${statusItem}\n\n`;
+    nomorUrut++;
+  });
+
+  const statusGabungan = Array.from(daftarStatus).join(", ");
+  const sisaTotal = totalBayarSemua - totalSudahBayar;
+
+  let hasilPesan = document.getElementById("teksBroadcast").value;
+  hasilPesan = hasilPesan.replace("{{DAFTAR_PESANAN}}", daftarPesanan.trim());
+  hasilPesan = hasilPesan.replace("{{TOTAL_BAYAR}}", totalBayarSemua.toLocaleString('id-ID'));
+  hasilPesan = hasilPesan.replace("{{STATUS_BAYAR}}", statusGabungan);
+  hasilPesan = hasilPesan.replace("{{SISA_TAGIHAN}}", sisaTotal.toLocaleString('id-ID'));
+
+  const kotakHasil = document.getElementById("hasilPreview");
+  kotakHasil.textContent = hasilPesan;
+  kotakHasil.style.display = "block";
+  tampilkanPesan(`✅ Preview berhasil dibuat dari ${daftarIndexTerpilih.length} pesanan terpilih!`, "sukses");
+}
+
+function salinDataPembeli(){
+  let teks = "📋 DAFTAR PEMBELI PO KAOS HAUL KE-28 AL-MU'AWANAH\n";
+  teks += "========================================\n\n";
+  let nomor = 1;
+  data.forEach(b=>{
+    if((b.status||"Aktif")==="Batal") return;
+    const jenis = b.ukuran==="XXL"?"xxl":"biasa";
+    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
+    const jml = b.jumlah||1;
+    const total = harga*jml;
+    teks += `${nomor}. ${b.namaPembeli||"Tanpa Nama"}\n`;
+    teks += `   Reseller: ${b.namaReseller||"Umum"}\n`;
+    teks += `   Barang: ${jml} pcs ${b.model||"Pendek"} - ${b.ukuran} - ${b.warna||"Putih"}\n`;
+    teks += `   Total: Rp ${total.toLocaleString('id-ID')}\n`;
+    teks += `   Status: ${b.kirim||"Belum Dikirim"} | ${(b.bayar||0)>=total?"Lunas":"Belum Lunas"}\n\n`;
+    nomor++;
+  });
+  navigator.clipboard.writeText(teks).then(()=>{
+    tampilkanPesan("✅ Data berhasil disalin ke papan klip!", "sukses");
+  }).catch(()=>{
+    const txtArea = document.createElement("textarea");
+    txtArea.value = teks;
+    document.body.appendChild(txtArea); txtArea.select(); document.execCommand("copy"); document.body.removeChild(txtArea);
+    tampilkanPesan("✅ Data berhasil disalin!", "sukses");
+  });
+}
+
+function unduhExcel(){
+  let isi = "No;NamaPembeli;Reseller;Status;Ukuran;Model;Warna;Jumlah;TotalJual;UangMasuk;Sisa;Tanggal;Keterangan;StatusKirim;Modal;BagianReseller;Untung\n";
+  data.forEach((b,i)=>{
+    const jenis = b.ukuran==="XXL"?"xxl":"biasa";
+    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
+    const modal = DAFTAR_MODAL[(b.model||"Pendek").toLowerCase()][jenis];
+    const jml = b.jumlah||1;
+    isi += `${i+1};"${b.namaPembeli||''}";"${b.namaReseller||''}";"${b.status||'Aktif'}";${b.ukuran};"${b.model||'Pendek'}";"${b.warna||'Putih'}";${jml};${harga*jml};${b.bayar||0};${(harga*jml)-(b.bayar||0)};"${b.tanggal||''}";"${b.keterangan||''}";"${b.kirim||'Belum Dikirim'}";${modal*jml};${BAGI_HASIL*jml};${(harga*jml)-(modal*jml)-(BAGI_HASIL*jml)}\n`;
+  });
+  const berkas = new Blob([isi], {type:'text/csv;charset=utf-8'});
+  const tautan = document.createElement("a");
+  tautan.href = URL.createObjectURL(berkas);
+  tautan.download = "Data_PO_Excel.csv";
+  tautan.click();
+  tampilkanPesan("✅ File Excel siap diunduh!", "sukses");
+}
+
+function tampilkanPesan(teks, jenis){
+  const kotak = document.getElementById("kotakPesan");
+  kotak.textContent = teks;
+  kotak.className = `pesan ${jenis}`;
+  kotak.style.display = "block";
+  setTimeout(()=>kotak.style.display="none", 5000);
+}
 </script>
 </body>
 </html>
