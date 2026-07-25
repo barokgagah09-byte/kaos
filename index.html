@@ -23,11 +23,21 @@ th{background:linear-gradient(135deg,#1e40af,#3b82f6); color:white; font-weight:
 tr:nth-child(even){background:#f8fafc;}
 tr:hover{background:#eff6ff; transition:background 0.15s ease;}
 
+/* FITUR WARNA TAMBAHAN UNTUK HIGHLIGHT BARIS & KOLOM SELEKSI */
+tr.baris-terpilih {
+  background-color: #fef08a !important; /* Warna sorot kuning lembut untuk baris yang dicentang */
+}
+input:focus, select:focus, textarea:focus {
+  outline: none !important;
+  border: 2px solid #2563eb !important;
+  background-color: #fef9c3 !important; /* Warna sorot kuning terang untuk kolom/kolam yang sedang aktif diklik */
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.4) !important;
+}
+
 .tabel-ringkas {min-width: 100%; table-layout: auto; border-radius:10px;}
 .tabel-ringkas th {background:linear-gradient(135deg,#475569,#64748b);}
 
 input,select,textarea{width:100%; padding:10px 8px; border:1px solid #cbd5e1; border-radius:8px; font-size:15px; background:#fcfdff; transition:all 0.2s ease;}
-input:focus, select:focus, textarea:focus{outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.15); background:#fff;}
 input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; display:block;}
 
 .tombol{padding:12px 10px; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; margin:5px 3px; min-height:48px; transition:all 0.2s ease; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
@@ -265,11 +275,17 @@ function batalSemua(){
   tampilkanPesan("❌ Pilihan dibatalkan semua!", "sukses");
 }
 
-function ubahStatusPilihan(index, status){
+function ubahStatusPilihan(index, status, elInput){
   if(status){
     if(!daftarIndexTerpilih.includes(index)) daftarIndexTerpilih.push(index);
   }else{
     daftarIndexTerpilih = daftarIndexTerpilih.filter(i => i !== index);
+  }
+  // Sorot baris tanpa harus render ulang seluruh tabel
+  const baris = elInput.closest('tr');
+  if(baris) {
+    if(status) baris.classList.add('baris-terpilih');
+    else baris.classList.remove('baris-terpilih');
   }
 }
 
@@ -302,8 +318,9 @@ function tampilkanTabel(){
     const totalModal = modalSatuan * (baris.jumlah||1);
     const bagianReseller = BAGI_HASIL * (baris.jumlah||1);
     const untung = totalJual - totalModal - bagianReseller;
-    const kelas = (baris.status||"Aktif") === "Batal" ? "baris-batal" : "";
-    const terpilih = daftarIndexTerpilih.includes(nomor) ? "checked" : "";
+    let kelas = (baris.status||"Aktif") === "Batal" ? "baris-batal " : "";
+    const terpilih = daftarIndexTerpilih.includes(nomor);
+    if (terpilih) kelas += "baris-terpilih";
 
     let teksBayarHtml, warnaBayar;
     if((baris.bayar||0) === 0) {teksBayarHtml = "🔴 Belum Bayar"; warnaBayar = "#dc3545";}
@@ -312,37 +329,37 @@ function tampilkanTabel(){
 
     isi.innerHTML += `
     <tr class="${kelas}">
-      <td><input type="checkbox" ${terpilih} onchange="ubahStatusPilihan(${nomor}, this.checked)"></td>
+      <td><input type="checkbox" ${terpilih ? "checked" : ""} onchange="ubahStatusPilihan(${nomor}, this.checked, this)"></td>
       <td>${nomor+1}</td>
-      <td><input type="text" value="${baris.namaPembeli||''}" onchange="ubahData(${nomor},'namaPembeli',this.value)"></td>
-      <td><input type="text" value="${baris.namaReseller||''}" onchange="ubahData(${nomor},'namaReseller',this.value)"></td>
-      <td><select onchange="ubahData(${nomor},'status',this.value)">
+      <td><input type="text" value="${baris.namaPembeli||''}" onchange="ubahDataOtomatis(${nomor},'namaPembeli',this.value)"></td>
+      <td><input type="text" value="${baris.namaReseller||''}" onchange="ubahDataOtomatis(${nomor},'namaReseller',this.value)"></td>
+      <td><select onchange="ubahDataPemberat(${nomor},'status',this.value)">
         <option value="Aktif" ${(baris.status||'Aktif')==='Aktif'?'selected':''}>✅ Aktif</option>
         <option value="Batal" ${(baris.status||'Aktif')==='Batal'?'selected':''}>❌ Batal</option>
       </select></td>
-      <td><select onchange="ubahData(${nomor},'ukuran',this.value)">
+      <td><select onchange="ubahDataPemberat(${nomor},'ukuran',this.value)">
         <option value="S" ${baris.ukuran==='S'?'selected':''}>S</option>
         <option value="M" ${baris.ukuran==='M'?'selected':''}>M</option>
         <option value="L" ${baris.ukuran==='L'?'selected':''}>L</option>
         <option value="XL" ${baris.ukuran==='XL'?'selected':''}>XL</option>
         <option value="XXL" ${baris.ukuran==='XXL'?'selected':''}>XXL</option>
       </select></td>
-      <td><select onchange="ubahData(${nomor},'model',this.value)">
+      <td><select onchange="ubahDataPemberat(${nomor},'model',this.value)">
         <option value="Pendek" ${(baris.model||'Pendek')==='Pendek'?'selected':''}>Lengan Pendek</option>
         <option value="Panjang" ${(baris.model||'Pendek')==='Panjang'?'selected':''}>Lengan Panjang</option>
       </select></td>
-      <td><select onchange="ubahData(${nomor},'warna',this.value)">
+      <td><select onchange="ubahDataOtomatis(${nomor},'warna',this.value)">
         <option value="Putih" ${(baris.warna||'Putih')==='Putih'?'selected':''}>Putih</option>
         <option value="Hitam" ${(baris.warna||'Putih')==='Hitam'?'selected':''}>Hitam</option>
       </select></td>
-      <td><input type="number" min="1" value="${baris.jumlah||1}" onchange="ubahData(${nomor},'jumlah',Number(this.value))"></td>
+      <td><input type="number" min="1" value="${baris.jumlah||1}" onchange="ubahDataPemberat(${nomor},'jumlah',Number(this.value))"></td>
       <td>Rp ${totalJual.toLocaleString('id-ID')}</td>
-      <td><input type="number" min="0" value="${baris.bayar||0}" onchange="ubahData(${nomor},'bayar',Number(this.value))"></td>
+      <td><input type="number" min="0" value="${baris.bayar||0}" onchange="ubahDataPemberat(${nomor},'bayar',Number(this.value))"></td>
       <td>Rp ${sisa.toLocaleString('id-ID')}</td>
       <td style="color:${warnaBayar}; font-weight:bold;">${teksBayarHtml}</td>
-      <td><input type="date" value="${baris.tanggal||''}" onchange="ubahData(${nomor},'tanggal',this.value)"></td>
-      <td><input type="text" value="${baris.keterangan||''}" onchange="ubahData(${nomor},'keterangan',this.value)"></td>
-      <td><select onchange="ubahData(${nomor},'kirim',this.value)">
+      <td><input type="date" value="${baris.tanggal||''}" onchange="ubahDataOtomatis(${nomor},'tanggal',this.value)"></td>
+      <td><input type="text" value="${baris.keterangan||''}" onchange="ubahDataOtomatis(${nomor},'keterangan',this.value)"></td>
+      <td><select onchange="ubahDataOtomatis(${nomor},'kirim',this.value)">
         <option value="Belum Dikirim" ${(baris.kirim||'Belum Dikirim')==='Belum Dikirim'?'selected':''}>📦 Belum Dikirim</option>
         <option value="Sudah Dikirim" ${(baris.kirim||'Belum Dikirim')==='Sudah Dikirim'?'selected':''}>🚚 Sudah Dikirim</option>
       </select></td>
@@ -355,10 +372,18 @@ function tampilkanTabel(){
   hitungRingkasan();
 }
 
-function ubahData(index, kolom, nilai){
+// Fungsi update ringan tanpa membuat ketikan/pilihan macet
+function ubahDataOtomatis(index, kolom, nilai){
   data[index][kolom] = nilai;
-  tampilkanTabel();
   simpanOtomatis();
+  hitungRingkasan();
+}
+
+// Fungsi update berat (merender ulang kalkulasi angka & baris jika ada perubahan harga/jumlah/status)
+function ubahDataPemberat(index, kolom, nilai){
+  data[index][kolom] = nilai;
+  simpanOtomatis();
+  tampilkanTabel();
 }
 
 function hapusBaris(index){
