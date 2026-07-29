@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Catatan PO Kaos - Ukuran Besar</title>
+<title>Catatan PO Kaos - Lengkap Warna & Lunas</title>
 <style>
 *{box-sizing:border-box; font-family:'Segoe UI', Roboto, Arial,sans-serif; margin:0; padding:0;}
 html{font-size:16px;}
@@ -23,16 +23,8 @@ th{background:linear-gradient(135deg,#1e40af,#3b82f6); color:white; font-weight:
 tr:nth-child(even){background:#f8fafc;}
 tr:hover{background:#eff6ff; transition:background 0.15s ease;}
 
-/* FITUR WARNA TAMBAHAN UNTUK HIGHLIGHT BARIS & KOLOM SELEKSI */
-tr.baris-terpilih {
-  background-color: #fef08a !important; /* Warna sorot kuning lembut untuk baris yang dicentang */
-}
-input:focus, select:focus, textarea:focus {
-  outline: none !important;
-  border: 2px solid #2563eb !important;
-  background-color: #fef9c3 !important; /* Warna sorot kuning terang untuk kolom/kolam yang sedang aktif diklik */
-  box-shadow: 0 0 8px rgba(37, 99, 235, 0.4) !important;
-}
+tr.baris-terpilih {background-color: #fef08a !important;}
+input:focus, select:focus, textarea:focus {outline: none !important; border:2px solid #2563eb !important; background-color:#fef9c3 !important; box-shadow:0 0 8px rgba(37,99,235,0.4) !important;}
 
 .tabel-ringkas {min-width: 100%; table-layout: auto; border-radius:10px;}
 .tabel-ringkas th {background:linear-gradient(135deg,#475569,#64748b);}
@@ -47,7 +39,6 @@ input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; d
 .muat{background:linear-gradient(135deg,#0d9488,#14b8a6); color:white;}
 .cetak{background:linear-gradient(135deg,#d97706,#f59e0b); color:white;}
 .salin{background:linear-gradient(135deg,#2563eb,#3b82f6); color:white;}
-.broadcast{background:linear-gradient(135deg,#7c3aed,#8b5cf6); color:white;}
 .pilih{background:linear-gradient(135deg,#059669,#10b981); color:white; font-size:14px; min-height:40px; padding:8px 12px;}
 .hapus{background:linear-gradient(135deg,#dc2626,#ef4444); color:white; padding:8px 14px; font-size:20px; width:auto; min-height:36px;}
 
@@ -60,6 +51,9 @@ input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; d
 .p5{background:linear-gradient(135deg,#15803d,#22c55e);}
 .p6{background:linear-gradient(135deg,#b91c1c,#ef4444);}
 .p7{background:linear-gradient(135deg,#1e40af,#3b82f6); font-weight:bold; font-size:16px; grid-column:1 / -1;}
+.putih{background:linear-gradient(135deg,#f8fafc,#e2e8f0); color:#1e293b; border:2px solid #94a3b8;}
+.hitam{background:linear-gradient(135deg,#0f172a,#1e293b); color:#fff;}
+.lunas{background:linear-gradient(135deg,#065f46,#10b981); font-weight:bold;}
 
 .pesan{margin-top:12px; padding:12px; border-radius:10px; text-align:center; font-size:15px; display:none; font-weight:500;}
 .sukses{background:#dcfce7; color:#166534; border:1px solid #bbf7d0;}
@@ -88,6 +82,7 @@ input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; d
 • Pendek XXL: Jual 120.000 | Modal 75.000<br>
 • Panjang Biasa: Jual 125.000 | Modal 75.000<br>
 • Panjang XXL: Jual 130.000 | Modal 80.000<br>
+• Khusus Atus: Harga hitung @Rp 80.000<br>
 • Bagi hasil reseller: <b>Rp 10.000 / pcs</b><br>
 ✅ <b>WAJIB:</b> Klik tombol <b>💾 Simpan Cadangan</b> sesudah selesai mencatat!
 </div>
@@ -96,7 +91,7 @@ input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; d
   <h3>📋 Daftar Pesanan</h3>
   
   <div class="kotak-cari">
-    <input type="text" id="inputCari" oninput="tampilkanTabel()" placeholder="🔍 Cari nama, reseller, ukuran, warna, status...">
+    <input type="text" id="inputCari" oninput="tampilkanTabel()" placeholder="🔍 Cari nama, ukuran, warna, lunas/belum...">
   </div>
   <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
     <button class="tombol pilih" onclick="pilihSemua()">✅ Pilih Semua</button>
@@ -145,13 +140,27 @@ input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; d
 </div>
 
 <div class="card">
-  <h3>📊 RANGKUMAN OTOMATIS</h3>
+  <h3>📊 RANGKUMAN OTOMATIS LENGKAP</h3>
+  
+  <h4>🎨 RINGKASAN WARNA KESELURUHAN</h4>
+  <div class="ringkas" style="margin-bottom: 12px;">
+    <div class="putih">⚪ Warna Putih<br><span id="totPutih">0</span> pcs</div>
+    <div class="hitam">⚫ Warna Hitam<br><span id="totHitam">0</span> pcs</div>
+    <div class="p1">Total Semua<br><span id="totSemua">0</span> pcs</div>
+  </div>
+
+  <h4>✅ RINGKASAN KHUSUS YANG SUDAH LUNAS</h4>
   <div class="ringkas" style="margin-bottom: 16px;">
-    <div class="p1">Total Pesanan<br><span id="totPesanan">0</span> pcs</div>
+    <div class="lunas">Total Lunas<br><span id="totLunas">0</span> pcs</div>
+    <div class="putih">⚪ Putih Lunas<br><span id="totPutihLunas">0</span> pcs</div>
+    <div class="hitam">⚫ Hitam Lunas<br><span id="totHitamLunas">0</span> pcs</div>
+    <div class="p5">💰 Uang Lunas Masuk<br>Rp <span id="totUangLunas">0</span></div>
+  </div>
+
+  <div class="ringkas" style="margin-bottom: 16px;">
     <div class="p2">Ukuran S/M/L/XL/XXL<br><span id="totUkuran">0/0/0/0/0</span></div>
     <div class="p3">Pendek / Panjang<br><span id="totModel">0 / 0</span></div>
     <div class="p4">Uang Reseller<br>Rp <span id="totReseller">0</span></div>
-    <div class="p5">Uang Sudah Masuk<br>Rp <span id="totMasuk">0</span></div>
     <div class="p6">Total Modal<br>Rp <span id="totModal">0</span></div>
     <div class="p7">💸 KEUNTUNGAN BERSIH<br>Rp <span id="totUntung">0</span></div>
   </div>
@@ -170,31 +179,11 @@ input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; d
 
   <h4>👥 REKAP TOTAL PER RESELLER</h4>
   <div class="kotak-rekap" id="rekapReseller">Memuat data...</div>
-
-  <h4>📢 PREVIEW PESAN UNDANGAN / KONFIRMASI</h4>
-  <div class="kotak-broadcast">
-    <span class="info-pilih">💡 Centang dulu pesanan yang ingin dimasukkan ke pesan, lalu klik tombol di bawah</span>
-    <textarea id="teksBroadcast" placeholder="Ketik pesan yang ingin disampaikan ke pembeli/reseller...">Assalamu'alaikum Wr. Wb.
-
-Terima kasih atas pemesanan Kaos Haul Ke-28 Al-Mu'awanah ya 🙏
-
-Berikut rincian pesanan Anda:
-{{DAFTAR_PESANAN}}
-
-Total Pembayaran: Rp {{TOTAL_BAYAR}}
-Status Pembayaran: {{STATUS_BAYAR}}
-Sisa Pembayaran: Rp {{SISA_TAGIHAN}}
-
-Kami akan segera proses pesanan Anda setelah pembayaran lunas.
-
-Wassalamu'alaikum Wr. Wb.</textarea>
-    <button class="tombol broadcast" onclick="buatPreviewPesan()">👁️ Buat Preview Dari Pesanan Terpilih</button>
-    <div id="hasilPreview" style="margin-top:10px; padding:12px; background:#fff; border-radius:8px; white-space:pre-wrap; display:none; border:1px solid #cbd5e1;"></div>
-  </div>
 </div>
 
 <script>
 const BAGI_HASIL = 10000;
+const HARGA_ATUS = 80000;
 const DAFTAR_HARGA = {
   pendek: {biasa:115000, xxl:120000},
   panjang: {biasa:125000, xxl:130000}
@@ -206,7 +195,7 @@ const DAFTAR_MODAL = {
 
 let data = [];
 let daftarIndexTerpilih = [];
-const KUNCI_SIMPAN = "Catatan_PO_Kaos_2026";
+const KUNCI_SIMPAN = "Catatan_PO_Kaos_2026_Lengkap";
 
 window.onload = () => {
   const dataTersimpan = localStorage.getItem(KUNCI_SIMPAN);
@@ -225,68 +214,12 @@ function simpanOtomatis(){
   localStorage.setItem(KUNCI_SIMPAN, JSON.stringify(data));
 }
 
-function simpanCadangan(){
-  const berkas = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-  const tautan = document.createElement("a");
-  tautan.href = URL.createObjectURL(berkas);
-  const hariIni = new Date().toISOString().slice(0,10);
-  tautan.download = `Cadangan_PO_Kaos_${hariIni}.json`;
-  tautan.click();
-  tampilkanPesan("✅ File cadangan tersimpan di HP!", "sukses");
-}
-
-function bukaCadangan(peristiwa){
-  const berkas = peristiwa.target.files[0];
-  if(!berkas) return;
-  const baca = new FileReader();
-  baca.onload = function(e){
-    try {
-      data = JSON.parse(e.target.result);
-      daftarIndexTerpilih = [];
-      simpanOtomatis();
-      tampilkanTabel();
-      tampilkanPesan("✅ Data dipulihkan dari cadangan!", "sukses");
-    } catch {
-      tampilkanPesan("❌ File tidak cocok atau rusak!", "error");
-    }
-  };
-  baca.readAsText(berkas);
-}
-
-function tambahBaris(){
-  data.push({
-    namaPembeli:"", namaReseller:"", status:"Aktif", ukuran:"S",
-    model:"Pendek", warna:"Putih", jumlah:1, bayar:0, tanggal:"", keterangan:"", kirim:"Belum Dikirim"
-  });
-  tampilkanTabel();
-  simpanOtomatis();
-}
-
-function pilihSemua(){
-  daftarIndexTerpilih = data.map((_,i) => i);
-  tampilkanTabel();
-  tampilkanPesan("✅ Semua pesanan terpilih!", "sukses");
-}
-
-function batalSemua(){
-  daftarIndexTerpilih = [];
-  tampilkanTabel();
-  document.getElementById("hasilPreview").style.display = "none";
-  tampilkanPesan("❌ Pilihan dibatalkan semua!", "sukses");
-}
-
-function ubahStatusPilihan(index, status, elInput){
-  if(status){
-    if(!daftarIndexTerpilih.includes(index)) daftarIndexTerpilih.push(index);
-  }else{
-    daftarIndexTerpilih = daftarIndexTerpilih.filter(i => i !== index);
-  }
-  // Sorot baris tanpa harus render ulang seluruh tabel
-  const baris = elInput.closest('tr');
-  if(baris) {
-    if(status) baris.classList.add('baris-terpilih');
-    else baris.classList.remove('baris-terpilih');
-  }
+function cekLunas(baris){
+  const jenisUk = baris.ukuran === "XXL" ? "xxl" : "biasa";
+  let hargaSat = DAFTAR_HARGA[(baris.model||"Pendek").toLowerCase()][jenisUk];
+  if((baris.namaPembeli||"").trim().toLowerCase() === "atus") hargaSat = HARGA_ATUS;
+  const totalHarga = hargaSat * (baris.jumlah||1);
+  return (baris.bayar||0) >= totalHarga;
 }
 
 function tampilkanTabel(){
@@ -296,7 +229,8 @@ function tampilkanTabel(){
   
   data.forEach((baris, nomor) => {
     const jenisUkuran = baris.ukuran === "XXL" ? "xxl" : "biasa";
-    const hargaSatuan = DAFTAR_HARGA[(baris.model||"Pendek").toLowerCase()][jenisUkuran];
+    let hargaSatuan = DAFTAR_HARGA[(baris.model||"Pendek").toLowerCase()][jenisUkuran];
+    if((baris.namaPembeli||"").trim().toLowerCase() === "atus") hargaSatuan = HARGA_ATUS;
     const totalJual = hargaSatuan * (baris.jumlah||1);
     const sisa = totalJual - (baris.bayar||0);
     
@@ -331,7 +265,7 @@ function tampilkanTabel(){
     <tr class="${kelas}">
       <td><input type="checkbox" ${terpilih ? "checked" : ""} onchange="ubahStatusPilihan(${nomor}, this.checked, this)"></td>
       <td>${nomor+1}</td>
-      <td><input type="text" value="${baris.namaPembeli||''}" onchange="ubahDataOtomatis(${nomor},'namaPembeli',this.value)"></td>
+      <td><input type="text" value="${baris.namaPembeli||''}" onchange="ubahDataPemberat(${nomor},'namaPembeli',this.value)"></td>
       <td><input type="text" value="${baris.namaReseller||''}" onchange="ubahDataOtomatis(${nomor},'namaReseller',this.value)"></td>
       <td><select onchange="ubahDataPemberat(${nomor},'status',this.value)">
         <option value="Aktif" ${(baris.status||'Aktif')==='Aktif'?'selected':''}>✅ Aktif</option>
@@ -348,7 +282,7 @@ function tampilkanTabel(){
         <option value="Pendek" ${(baris.model||'Pendek')==='Pendek'?'selected':''}>Lengan Pendek</option>
         <option value="Panjang" ${(baris.model||'Pendek')==='Panjang'?'selected':''}>Lengan Panjang</option>
       </select></td>
-      <td><select onchange="ubahDataOtomatis(${nomor},'warna',this.value)">
+      <td><select onchange="ubahDataPemberat(${nomor},'warna',this.value)">
         <option value="Putih" ${(baris.warna||'Putih')==='Putih'?'selected':''}>Putih</option>
         <option value="Hitam" ${(baris.warna||'Putih')==='Hitam'?'selected':''}>Hitam</option>
       </select></td>
@@ -372,14 +306,12 @@ function tampilkanTabel(){
   hitungRingkasan();
 }
 
-// Fungsi update ringan tanpa membuat ketikan/pilihan macet
 function ubahDataOtomatis(index, kolom, nilai){
   data[index][kolom] = nilai;
   simpanOtomatis();
   hitungRingkasan();
 }
 
-// Fungsi update berat (merender ulang kalkulasi angka & baris jika ada perubahan harga/jumlah/status)
 function ubahDataPemberat(index, kolom, nilai){
   data[index][kolom] = nilai;
   simpanOtomatis();
@@ -389,9 +321,7 @@ function ubahDataPemberat(index, kolom, nilai){
 function hapusBaris(index){
   if(confirm("Yakin hapus pesanan ini?")){
     data.splice(index,1);
-    daftarIndexTerpilih = daftarIndexTerpilih
-      .filter(i => i !== index)
-      .map(i => i >= index ? i - 1 : i);
+    daftarIndexTerpilih = daftarIndexTerpilih.filter(i => i !== index).map(i => i >= index ? i - 1 : i);
     tampilkanTabel();
     simpanOtomatis();
   }
@@ -400,26 +330,32 @@ function hapusBaris(index){
 function hitungRingkasan(){
   let totPesanan=0, totS=0,totM=0,totL=0,totXL=0,totXXL=0;
   let totPendek=0,totPanjang=0,totReseller=0,totMasuk=0,totModal=0,totUntung=0;
+  let putihSemua=0, hitamSemua=0, putihLunas=0, hitamLunas=0, jmlLunas=0, uangLunas=0;
   let rekapResellerObj = {};
   
   let matriksDetail = {
-    "S": { Pendek: 0, Panjang: 0 },
-    "M": { Pendek: 0, Panjang: 0 },
-    "L": { Pendek: 0, Panjang: 0 },
-    "XL": { Pendek: 0, Panjang: 0 },
-    "XXL": { Pendek: 0, Panjang: 0 }
+    "S": { Pendek: 0, Panjang: 0 }, "M": { Pendek: 0, Panjang: 0 },
+    "L": { Pendek: 0, Panjang: 0 }, "XL": { Pendek: 0, Panjang: 0 }, "XXL": { Pendek: 0, Panjang: 0 }
   };
   
   data.forEach(b => {
-    totMasuk += b.bayar||0;
     if((b.status||"Aktif")==="Batal") return;
     const jenis = b.ukuran==="XXL"?"xxl":"biasa";
-    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
+    let harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
+    if((b.namaPembeli||"").trim().toLowerCase() === "atus") harga = HARGA_ATUS;
     const modal = DAFTAR_MODAL[(b.model||"Pendek").toLowerCase()][jenis];
     const jml = b.jumlah||1;
     const namaRes = (b.namaReseller||"Reseller Umum").trim();
-    
+    const isLunas = cekLunas(b);
+    const totalHarga = harga * jml;
+
     totPesanan += jml;
+    if(b.warna==="Putih") putihSemua += jml; else hitamSemua += jml;
+    if(isLunas){
+      jmlLunas += jml; uangLunas += b.bayar||0;
+      if(b.warna==="Putih") putihLunas += jml; else hitamLunas += jml;
+    }
+
     if(b.ukuran==='S')totS+=jml; if(b.ukuran==='M')totM+=jml; if(b.ukuran==='L')totL+=jml; if(b.ukuran==='XL')totXL+=jml; if(b.ukuran==='XXL')totXXL+=jml;
     if((b.model||"Pendek")==="Pendek")totPendek+=jml; else totPanjang+=jml;
     
@@ -427,146 +363,56 @@ function hitungRingkasan(){
     const mod = b.model || "Pendek";
     if(matriksDetail[uk]) matriksDetail[uk][mod] += jml;
 
+    totMasuk += b.bayar||0;
     totReseller += BAGI_HASIL * jml;
     totModal += modal * jml;
-    totUntung += (harga * jml) - (modal * jml) - (BAGI_HASIL * jml);
+    totUntung += totalHarga - (modal * jml) - (BAGI_HASIL * jml);
 
     if(!rekapResellerObj[namaRes]) rekapResellerObj[namaRes] = {jumlah:0, totalBagi:0};
     rekapResellerObj[namaRes].jumlah += jml;
     rekapResellerObj[namaRes].totalBagi += BAGI_HASIL * jml;
   });
 
-  document.getElementById("totPesanan").textContent = totPesanan;
+  document.getElementById("totPutih").textContent = putihSemua;
+  document.getElementById("totHitam").textContent = hitamSemua;
+  document.getElementById("totSemua").textContent = totPesanan;
+  document.getElementById("totLunas").textContent = jmlLunas;
+  document.getElementById("totPutihLunas").textContent = putihLunas;
+  document.getElementById("totHitamLunas").textContent = hitamLunas;
+  document.getElementById("totUangLunas").textContent = uangLunas.toLocaleString('id-ID');
   document.getElementById("totUkuran").textContent = `${totS}/${totM}/${totL}/${totXL}/${totXXL}`;
   document.getElementById("totModel").textContent = `${totPendek} / ${totPanjang}`;
   document.getElementById("totReseller").textContent = totReseller.toLocaleString('id-ID');
-  document.getElementById("totMasuk").textContent = totMasuk.toLocaleString('id-ID');
   document.getElementById("totModal").textContent = totModal.toLocaleString('id-ID');
   document.getElementById("totUntung").textContent = totUntung.toLocaleString('id-ID');
 
   const isiDetail = document.getElementById("detailUkuranModel");
   isiDetail.innerHTML = "";
   for (let uk in matriksDetail) {
-    isiDetail.innerHTML += `
-      <tr>
-        <td style="background:#f1f5f9; font-weight:bold; color:#1e293b;">Ukuran ${uk}</td>
-        <td>${matriksDetail[uk].Pendek} pcs</td>
-        <td style="color:#c2410c;">${matriksDetail[uk].Panjang} pcs</td>
-      </tr>`;
+    isiDetail.innerHTML += `<tr><td style="background:#f1f5f9; font-weight:bold;">Ukuran ${uk}</td><td>${matriksDetail[uk].Pendek} pcs</td><td style="color:#c2410c;">${matriksDetail[uk].Panjang} pcs</td></tr>`;
   }
 
   const kotakRekap = document.getElementById("rekapReseller");
-  kotakRekap.innerHTML = "";
-  if(Object.keys(rekapResellerObj).length === 0) {
-    kotakRekap.innerHTML = "Belum ada data reseller";
-  } else {
-    for(let res in rekapResellerObj) {
-      kotakRekap.innerHTML += `✅ <b>${res}</b>: ${rekapResellerObj[res].jumlah} pcs | Hak Bagi: Rp ${rekapResellerObj[res].totalBagi.toLocaleString('id-ID')}<br>`;
-    }
+  kotakRekap.innerHTML = Object.keys(rekapResellerObj).length === 0 ? "Belum ada data reseller" : "";
+  for(let res in rekapResellerObj) {
+    kotakRekap.innerHTML += `✅ <b>${res}</b>: ${rekapResellerObj[res].jumlah} pcs | Hak Bagi: Rp ${rekapResellerObj[res].totalBagi.toLocaleString('id-ID')}<br>`;
   }
 }
 
-function buatPreviewPesan(){
-  if(daftarIndexTerpilih.length === 0){
-    tampilkanPesan("⚠️ Silakan centang dulu pesanan yang ingin dimasukkan ke pesan!", "error");
-    return;
-  }
-
-  let daftarPesanan = "";
-  let totalBayarSemua = 0;
-  let totalSudahBayar = 0;
-  let nomorUrut = 1;
-  let daftarStatus = new Set();
-
-  daftarIndexTerpilih.forEach(idx => {
-    const b = data[idx];
-    if((b.status||"Aktif")==="Batal") return;
-    const jenis = b.ukuran==="XXL"?"xxl":"biasa";
-    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
-    const jml = b.jumlah||1;
-    const totalItem = harga * jml;
-    totalBayarSemua += totalItem;
-    totalSudahBayar += b.bayar||0;
-
-    let statusItem = "";
-    const sisaItem = totalItem - (b.bayar||0);
-    if((b.bayar||0) === 0) statusItem = "🔴 Belum Bayar";
-    else if(sisaItem > 0) statusItem = "🟡 Menyicil";
-    else statusItem = "🟢 Lunas";
-    daftarStatus.add(statusItem);
-
-    daftarPesanan += `${nomorUrut}. ${b.namaPembeli||"Pembeli"} (Reseller: ${b.namaReseller||"Umum"})\n`;
-    daftarPesanan += `   → ${jml} pcs | ${b.model||"Pendek"} | ${b.ukuran} | ${b.warna||"Putih"}\n`;
-    daftarPesanan += `   → Total: Rp ${totalItem.toLocaleString('id-ID')} | ${statusItem}\n\n`;
-    nomorUrut++;
-  });
-
-  const statusGabungan = Array.from(daftarStatus).join(", ");
-  const sisaTotal = totalBayarSemua - totalSudahBayar;
-
-  let hasilPesan = document.getElementById("teksBroadcast").value;
-  hasilPesan = hasilPesan.replace("{{DAFTAR_PESANAN}}", daftarPesanan.trim());
-  hasilPesan = hasilPesan.replace("{{TOTAL_BAYAR}}", totalBayarSemua.toLocaleString('id-ID'));
-  hasilPesan = hasilPesan.replace("{{STATUS_BAYAR}}", statusGabungan);
-  hasilPesan = hasilPesan.replace("{{SISA_TAGIHAN}}", sisaTotal.toLocaleString('id-ID'));
-
-  const kotakHasil = document.getElementById("hasilPreview");
-  kotakHasil.textContent = hasilPesan;
-  kotakHasil.style.display = "block";
-  tampilkanPesan(`✅ Preview berhasil dibuat dari ${daftarIndexTerpilih.length} pesanan terpilih!`, "sukses");
+function pilihSemua(){ daftarIndexTerpilih = data.map((_,i) => i); tampilkanTabel(); tampilkanPesan("✅ Semua terpilih!", "sukses"); }
+function batalSemua(){ daftarIndexTerpilih = []; tampilkanTabel(); tampilkanPesan("❌ Pilihan batal!", "sukses"); }
+function ubahStatusPilihan(index, status, elInput){
+  if(status && !daftarIndexTerpilih.includes(index)) daftarIndexTerpilih.push(index);
+  else daftarIndexTerpilih = daftarIndexTerpilih.filter(i => i !== index);
+  const baris = elInput.closest('tr');
+  if(baris) status ? baris.classList.add('baris-terpilih') : baris.classList.remove('baris-terpilih');
 }
-
-function salinDataPembeli(){
-  let teks = "📋 DAFTAR PEMBELI PO KAOS HAUL KE-28 AL-MU'AWANAH\n";
-  teks += "========================================\n\n";
-  let nomor = 1;
-  data.forEach(b=>{
-    if((b.status||"Aktif")==="Batal") return;
-    const jenis = b.ukuran==="XXL"?"xxl":"biasa";
-    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
-    const jml = b.jumlah||1;
-    const total = harga*jml;
-    teks += `${nomor}. ${b.namaPembeli||"Tanpa Nama"}\n`;
-    teks += `   Reseller: ${b.namaReseller||"Umum"}\n`;
-    teks += `   Barang: ${jml} pcs ${b.model||"Pendek"} - ${b.ukuran} - ${b.warna||"Putih"}\n`;
-    teks += `   Total: Rp ${total.toLocaleString('id-ID')}\n`;
-    teks += `   Status: ${b.kirim||"Belum Dikirim"} | ${(b.bayar||0)>=total?"Lunas":"Belum Lunas"}\n\n`;
-    nomor++;
-  });
-  navigator.clipboard.writeText(teks).then(()=>{
-    tampilkanPesan("✅ Data berhasil disalin ke papan klip!", "sukses");
-  }).catch(()=>{
-    const txtArea = document.createElement("textarea");
-    txtArea.value = teks;
-    document.body.appendChild(txtArea); txtArea.select(); document.execCommand("copy"); document.body.removeChild(txtArea);
-    tampilkanPesan("✅ Data berhasil disalin!", "sukses");
-  });
-}
-
-function unduhExcel(){
-  let isi = "No;NamaPembeli;Reseller;Status;Ukuran;Model;Warna;Jumlah;TotalJual;UangMasuk;Sisa;Tanggal;Keterangan;StatusKirim;Modal;BagianReseller;Untung\n";
-  data.forEach((b,i)=>{
-    const jenis = b.ukuran==="XXL"?"xxl":"biasa";
-    const harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis];
-    const modal = DAFTAR_MODAL[(b.model||"Pendek").toLowerCase()][jenis];
-    const jml = b.jumlah||1;
-    isi += `${i+1};"${b.namaPembeli||''}";"${b.namaReseller||''}";"${b.status||'Aktif'}";${b.ukuran};"${b.model||'Pendek'}";"${b.warna||'Putih'}";${jml};${harga*jml};${b.bayar||0};${(harga*jml)-(b.bayar||0)};"${b.tanggal||''}";"${b.keterangan||''}";"${b.kirim||'Belum Dikirim'}";${modal*jml};${BAGI_HASIL*jml};${(harga*jml)-(modal*jml)-(BAGI_HASIL*jml)}\n`;
-  });
-  const berkas = new Blob([isi], {type:'text/csv;charset=utf-8'});
-  const tautan = document.createElement("a");
-  tautan.href = URL.createObjectURL(berkas);
-  tautan.download = "Data_PO_Excel.csv";
-  tautan.click();
-  tampilkanPesan("✅ File Excel siap diunduh!", "sukses");
-}
-
-function tampilkanPesan(teks, jenis){
-  const kotak = document.getElementById("kotakPesan");
-  kotak.textContent = teks;
-  kotak.className = `pesan ${jenis}`;
-  kotak.style.display = "block";
-  setTimeout(()=>kotak.style.display="none", 5000);
-}
+function tambahBaris(){ data.push({namaPembeli:"", namaReseller:"", status:"Aktif", ukuran:"S", model:"Pendek", warna:"Putih", jumlah:1, bayar:0, tanggal:"", keterangan:"", kirim:"Belum Dikirim"}); tampilkanTabel(); simpanOtomatis(); }
+function simpanCadangan(){ const berkas = new Blob([JSON.stringify(data,null,2)], {type:'application/json'}); const tautan = document.createElement("a"); tautan.href = URL.createObjectURL(berkas); const hariIni = new Date().toISOString().slice(0,10); tautan.download = `Cadangan_PO_Kaos_Lengkap_${hariIni}.json`; tautan.click(); tampilkanPesan("✅ Cadangan tersimpan!", "sukses"); }
+function bukaCadangan(peristiwa){ const berkas = peristiwa.target.files[0]; if(!berkas) return; const baca = new FileReader(); baca.onload = e => { try{ data = JSON.parse(e.target.result); daftarIndexTerpilih = []; simpanOtomatis(); tampilkanTabel(); tampilkanPesan("✅ Data dipulihkan!", "sukses"); }catch{tampilkanPesan("❌ File tidak cocok!", "error");} }; baca.readAsText(berkas); }
+function salinDataPembeli(){ let teks = "📋 DAFTAR PEMBELI HAUL KE-28\n========================================\n\n"; let nomor=1; data.forEach(b=>{ if((b.status||"Aktif")==="Batal") return; const jenis = b.ukuran==="XXL"?"xxl":"biasa"; let harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis]; if((b.namaPembeli||"").trim().toLowerCase() === "atus") harga = HARGA_ATUS; const jml = b.jumlah||1; const total = harga*jml; teks += `${nomor}. ${b.namaPembeli||"Tanpa Nama"}\n   Reseller: ${b.namaReseller||"Umum"}\n   Barang: ${jml} pcs ${b.model||"Pendek"} - ${b.ukuran} - ${b.warna||"Putih"}\n   Total: Rp ${total.toLocaleString('id-ID')}\n   Status: ${b.kirim||"Belum Dikirim"} | ${cekLunas(b)?"🟢 Lunas":"🔴 Belum Lunas"}\n\n`; nomor++; }); navigator.clipboard.writeText(teks).then(()=>tampilkanPesan("✅ Disalin!", "sukses")).catch(()=>{const txtArea=document.createElement("textarea"); txtArea.value=teks; document.body.appendChild(txtArea); txtArea.select(); document.execCommand("copy"); document.body.removeChild(txtArea);}); }
+function unduhExcel(){ let isi = "No;NamaPembeli;Reseller;Ukuran;Model;Warna;Jumlah;Total;UangMasuk;StatusBayar\n"; data.forEach((b,i)=>{ const jenis = b.ukuran==="XXL"?"xxl":"biasa"; let harga = DAFTAR_HARGA[(b.model||"Pendek").toLowerCase()][jenis]; if((b.namaPembeli||"").trim().toLowerCase() === "atus") harga = HARGA_ATUS; const jml = b.jumlah||1; isi += `${i+1};"${b.namaPembeli||''}";"${b.namaReseller||''}";${b.ukuran};"${b.model||'Pendek'}";"${b.warna||'Putih'}";${jml};${harga*jml};${b.bayar||0};"${cekLunas(b)?'Lunas':'Belum'}"\n`; }); const berkas = new Blob([isi], {type:'text/csv;charset=utf-8'}); const tautan = document.createElement("a"); tautan.href = URL.createObjectURL(berkas); tautan.download = "Data_PO_Lengkap.csv"; tautan.click(); tampilkanPesan("✅ Excel siap!", "sukses"); }
+function tampilkanPesan(teks, jenis){ const kotak = document.getElementById("kotakPesan"); kotak.textContent = teks; kotak.className = `pesan ${jenis}`; kotak.style.display = "block"; setTimeout(()=>kotak.style.display="none", 6000); }
 </script>
 </body>
 </html>
