@@ -36,6 +36,9 @@ input:focus, select:focus, textarea:focus {
 
 .tabel-ringkas {min-width: 100%; table-layout: auto; border-radius:10px;}
 .tabel-ringkas th {background:linear-gradient(135deg,#475569,#64748b);}
+.tabel-detail-warna {min-width:100%; margin-top:8px;}
+.tabel-detail-warna th {font-size:14px; padding:8px 4px;}
+.tabel-detail-warna td {font-size:14px; padding:7px 4px;}
 
 input,select,textarea{width:100%; padding:10px 8px; border:1px solid #cbd5e1; border-radius:8px; font-size:15px; background:#fcfdff; transition:all 0.2s ease;}
 input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; display:block;}
@@ -156,13 +159,15 @@ input[type="checkbox"]{width:22px; height:22px; cursor:pointer; margin:0 auto; d
     <div class="p7">💸 KEUNTUNGAN BERSIH<br>Rp <span id="totUntung">0</span></div>
   </div>
 
-  <h4>📋 DETAIL PRODUKSI (PER UKURAN & MODEL)</h4>
-  <table class="tabel-ringkas">
+  <h4>📋 DETAIL PRODUKSI (PER UKURAN, MODEL & WARNA)</h4>
+  <table class="tabel-ringkas tabel-detail-warna">
     <thead>
       <tr>
         <th>Ukuran</th>
-        <th>Lengan Pendek</th>
-        <th>Lengan Panjang</th>
+        <th>Model</th>
+        <th>Warna Putih</th>
+        <th>Warna Hitam</th>
+        <th>Total Per Baris</th>
       </tr>
     </thead>
     <tbody id="detailUkuranModel"></tbody>
@@ -402,12 +407,13 @@ function hitungRingkasan(){
   let totPendek=0,totPanjang=0,totReseller=0,totMasuk=0,totModal=0,totUntung=0;
   let rekapResellerObj = {};
   
+  // Matriks detail baru: Ukuran > Model > Warna
   let matriksDetail = {
-    "S": { Pendek: 0, Panjang: 0 },
-    "M": { Pendek: 0, Panjang: 0 },
-    "L": { Pendek: 0, Panjang: 0 },
-    "XL": { Pendek: 0, Panjang: 0 },
-    "XXL": { Pendek: 0, Panjang: 0 }
+    "S": { Pendek: { Putih:0, Hitam:0 }, Panjang: { Putih:0, Hitam:0 } },
+    "M": { Pendek: { Putih:0, Hitam:0 }, Panjang: { Putih:0, Hitam:0 } },
+    "L": { Pendek: { Putih:0, Hitam:0 }, Panjang: { Putih:0, Hitam:0 } },
+    "XL": { Pendek: { Putih:0, Hitam:0 }, Panjang: { Putih:0, Hitam:0 } },
+    "XXL": { Pendek: { Putih:0, Hitam:0 }, Panjang: { Putih:0, Hitam:0 } }
   };
   
   data.forEach(b => {
@@ -418,14 +424,19 @@ function hitungRingkasan(){
     const modal = DAFTAR_MODAL[(b.model||"Pendek").toLowerCase()][jenis];
     const jml = b.jumlah||1;
     const namaRes = (b.namaReseller||"Reseller Umum").trim();
+    const warna = (b.warna||"Putih");
+    const uk = b.ukuran || "S";
+    const mod = b.model || "Pendek";
     
     totPesanan += jml;
     if(b.ukuran==='S')totS+=jml; if(b.ukuran==='M')totM+=jml; if(b.ukuran==='L')totL+=jml; if(b.ukuran==='XL')totXL+=jml; if(b.ukuran==='XXL')totXXL+=jml;
-    if((b.model||"Pendek")==="Pendek")totPendek+=jml; else totPanjang+=jml;
+    if(mod==="Pendek")totPendek+=jml; else totPanjang+=jml;
     
-    const uk = b.ukuran || "S";
-    const mod = b.model || "Pendek";
-    if(matriksDetail[uk]) matriksDetail[uk][mod] += jml;
+    // Isi data per warna
+    if(matriksDetail[uk] && matriksDetail[uk][mod]){
+      if(warna==="Putih") matriksDetail[uk][mod].Putih += jml;
+      if(warna==="Hitam") matriksDetail[uk][mod].Hitam += jml;
+    }
 
     totReseller += BAGI_HASIL * jml;
     totModal += modal * jml;
@@ -444,14 +455,32 @@ function hitungRingkasan(){
   document.getElementById("totModal").textContent = totModal.toLocaleString('id-ID');
   document.getElementById("totUntung").textContent = totUntung.toLocaleString('id-ID');
 
+  // Tampilkan detail lengkap dengan warna
   const isiDetail = document.getElementById("detailUkuranModel");
   isiDetail.innerHTML = "";
   for (let uk in matriksDetail) {
+    // Baris Pendek
+    const pPutih = matriksDetail[uk].Pendek.Putih;
+    const pHitam = matriksDetail[uk].Pendek.Hitam;
+    const totPendekBaris = pPutih + pHitam;
     isiDetail.innerHTML += `
       <tr>
-        <td style="background:#f1f5f9; font-weight:bold; color:#1e293b;">Ukuran ${uk}</td>
-        <td>${matriksDetail[uk].Pendek} pcs</td>
-        <td style="color:#c2410c;">${matriksDetail[uk].Panjang} pcs</td>
+        <td style="background:#f1f5f9; font-weight:bold; color:#1e293b;" rowspan="2">Ukuran ${uk}</td>
+        <td>Lengan Pendek</td>
+        <td>${pPutih} pcs</td>
+        <td>${pHitam} pcs</td>
+        <td style="font-weight:bold; color:#166534;">${totPendekBaris} pcs</td>
+      </tr>`;
+    // Baris Panjang
+    const lPutih = matriksDetail[uk].Panjang.Putih;
+    const lHitam = matriksDetail[uk].Panjang.Hitam;
+    const totPanjangBaris = lPutih + lHitam;
+    isiDetail.innerHTML += `
+      <tr>
+        <td>Lengan Panjang</td>
+        <td>${lPutih} pcs</td>
+        <td>${lHitam} pcs</td>
+        <td style="font-weight:bold; color:#c2410c;">${totPanjangBaris} pcs</td>
       </tr>`;
   }
 
